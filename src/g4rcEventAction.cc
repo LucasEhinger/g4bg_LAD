@@ -39,6 +39,7 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
 
   G4VHitsCollection *thiscol;
 
+if(HCE) {
   // Traverse all hit collections, sort by output type
   for( int hcidx = 0; hcidx < HCE->GetCapacity(); hcidx++ ){
       thiscol = HCE->GetHC(hcidx);
@@ -66,7 +67,7 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
 
       }
   }
-
+}
   // Fill tree and reset buffers
   fIO->FillTree();
   fIO->Flush();

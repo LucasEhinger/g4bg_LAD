@@ -29,7 +29,7 @@ g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
 	fTarg = "T2";
 	fHRS = "L";
-	fHRSAngle = 20.*deg;
+	fHRSAngle = 0.*deg;
 
 	if(fHRS=="L") {
 		fHRSAngle*=-1.0;
@@ -188,6 +188,21 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
+
+	// Detector
+	
+	G4Tubs* det_tubs = new G4Tubs("det_tubs",0.,20.*cm,1.*mm,0.*deg,360.*deg);
+	G4LogicalVolume* det_log = new G4LogicalVolume(det_tubs, fMaterial->vacuum, "det_log", 0,0,0);
+		
+	G4SDManager* SDman = G4SDManager::GetSDMpointer();
+	g4rcDetector* detSD = new g4rcDetector("detSD",101);
+	SDman->AddNewDetector(detSD);
+	det_log->SetSensitiveDetector(detSD);
+
+	double z_det = (d_q1+5.*cm)*cos(fHRSAngle);
+	double x_det = -(d_q1+5.*cm)*sin(fHRSAngle);
+
+	G4VPhysicalVolume* det_phys = new G4PVPlacement(rot_HRS, G4ThreeVector(x_det,0.,z_det), det_log, "det_physical", world_log, false, 0);
 
 	return world_phys;
 

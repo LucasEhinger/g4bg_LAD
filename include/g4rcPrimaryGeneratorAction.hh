@@ -11,35 +11,29 @@ class G4Event;
 class g4rcIO;
 class g4rcEvent;
 
-class g4rcPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
-{
-  public:
-    g4rcPrimaryGeneratorAction();
-    ~g4rcPrimaryGeneratorAction();
+class g4rcPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
 
-  public:
-    void GeneratePrimaries(G4Event* anEvent);
-    G4ParticleGun* GetParticleGun();
-    void SetIO( g4rcIO *io ){ fIO = io; }
-		bool Thetaspectrum(double );
-		bool pspectrum(double );
-		//void SourceModeSet();
-		void SourceModeSet(G4int );
+public:
+	g4rcPrimaryGeneratorAction();
+	~g4rcPrimaryGeneratorAction();
 
-	private:
-    G4ParticleGun* fParticleGun;
-		G4int fSourceMode;
+public:
+	void GeneratePrimaries(G4Event* anEvent);
+	G4ParticleGun* GetParticleGun();
+	void SetIO( g4rcIO *io ){ fIO = io; }
 
-    g4rcEvent *fDefaultEvent;
-    g4rcIO *fIO;
-	
-	THnF* fDistVDC;
+private:
+	G4ParticleGun* fParticleGun;
+	G4int fSourceMode;
 
-  public:
-		G4double fXmin, fXmax, fYmin, fYmax;
-    G4double fZ;
-    G4double fEmin, fEmax;
-		G4double fthetaMin, fthetaMax;
+	g4rcEvent *fDefaultEvent;
+	g4rcIO *fIO;
+
+public:
+	G4double fXmin, fXmax, fYmin, fYmax;
+	G4double fZ;
+	G4double fEbeam;
+
 };
 
 #endif
