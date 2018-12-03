@@ -29,6 +29,11 @@ g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
 	fTarg = "T2";
 	fHRS = "L";
+	fHRSAngle = 20.*deg;
+
+	if(fHRS=="L") {
+		fHRSAngle*=-1.0;
+	}
 
 	length = 25.0*cm;
 	radius = 0.65*cm;
@@ -59,24 +64,43 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	fMaterial = g4rcMaterial::GetMaterialManager();
 
+
+
+	// WORLD LOGICAL
+	
 	double world_x, world_y, world_z;
-	double det_x, det_y, det_z;
 
-	world_x = world_y = world_z = 275*cm;
-	det_x = 15*cm;
-	det_y = 6*cm;
-	det_z = 6*cm;
+	world_x = world_y = world_z = 1.5*m;
 
-	G4Box* world_box = new G4Box("World",world_x,world_y,world_z);
+	G4Box* world_box = new G4Box("world",world_x,world_y,world_z);
 
 	G4LogicalVolume* world_log
 	= new G4LogicalVolume(world_box,fMaterial->air,"World",0,0,0);
 
 	world_log->SetVisAttributes(G4VisAttributes::Invisible);
 
-	G4VPhysicalVolume* world_phys
-	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
 
+
+
+
+	// TARGET CHAMBER
+
+	double t_chamber = 0.406*mm;
+	double r_chamber = (1037./2.)*mm;
+	
+	G4Tubs* target_mother_tubs = new G4Tubs("targ_mother_tubs", 0., r_chamber+t_chamber, 25.*cm, 0.*deg, 360.*deg);
+	G4LogicalVolume* target_mother_log = new G4LogicalVolume(target_mother_tubs,fMaterial->vacuum,"target_mother_logical",0,0,0);
+	target_mother_log->SetVisAttributes(G4VisAttributes::Invisible);
+
+	G4RotationMatrix* rotX_neg90 = new G4RotationMatrix();
+	rotX_neg90->rotateX(-90.*deg);
+	G4RotationMatrix* rotX_pos90 = new G4RotationMatrix();
+	rotX_pos90->rotateX(90.*deg);
+
+	// Target chamber exit window
+	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 20.*cm ,0.*deg, 360.*deg);
+	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
+	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(0,G4ThreeVector(), chamber_log, "chamber_physical", target_mother_log, false, 0); 
 
 	// Target cell
 	const int nPoints = 10;
@@ -114,9 +138,10 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	cell_z[9] = -length/2.;
 	cell_r[9] = 0.;
 	
+
 	G4Polycone* cell_polycone = new G4Polycone("cell_polycone", 0.*deg, 360.*deg, nPoints, cell_r, cell_z);
 	G4LogicalVolume* cell_log = new G4LogicalVolume(cell_polycone, fMaterial->aluminum, "cell_logical",0,0,0);
-	G4VPhysicalVolume* cell_phys = new G4PVPlacement(0,G4ThreeVector(), cell_log, "cell_physical", world_log, false, 0); 
+	G4VPhysicalVolume* cell_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), cell_log, "cell_physical", target_mother_log, false, 0); 
 
 	// Target gas volume
 	
@@ -130,7 +155,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas, "gas_logical", 0,0,0);
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
-	G4VPhysicalVolume* gas_phys = new G4PVPlacement(0,G4ThreeVector(), gas_log, "gas_physical", world_log, false, 0);	
+	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
 
 	// Beryllium window (upstream of target)
 	
@@ -139,29 +164,30 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4LogicalVolume* be_log = new G4LogicalVolume(be_tubs, fMaterial->beryllium, "be_logical", 0,0,0);
 	G4VisAttributes* be_vis = new G4VisAttributes(G4Colour(1.,1.,0.));
 	be_log->SetVisAttributes(be_vis);
-	G4VPhysicalVolume* be_phys = new G4PVPlacement(0,G4ThreeVector(0.,0.,-50.*cm), be_log, "be_physical", world_log, false, 0);
+	G4VPhysicalVolume* be_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(0.,-30.*cm,0.), be_log, "be_physical", target_mother_log, false, 0);
 	
 
-	// Rotation matrix needed for next two volumes
-	G4RotationMatrix* rotx90 = new G4RotationMatrix();
-	rotx90->rotateX(-90.*deg);
+	G4VPhysicalVolume* target_mother_phys 
+	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
 
-	// Target chamber exit window
-	double t_ch = 0.406*mm;
-	double r_ch = (1037./2.)*mm;
-	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_ch, r_ch+t_ch, 15.*cm ,0.*deg, 180.*deg);
-	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
-	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(rotx90,G4ThreeVector(), chamber_log, "chamber_physical", world_log, false, 0); 
 
 	// Q1 entrance window
-	double t_q1w = 0.305*mm;
-	double d_ch_q1 = 81.6*cm;
-	G4Tubs* q1w_tubs = new G4Tubs("q1w_tubs", r_ch+t_ch+d_ch_q1, r_ch+t_ch+d_ch_q1+t_q1w, 25.*cm ,0.*deg, 180.*deg);
-	G4LogicalVolume* q1w_log = new G4LogicalVolume(q1w_tubs, fMaterial->kapton, "q1w_logical", 0,0,0);
-	G4VPhysicalVolume* q1w_phys = new G4PVPlacement(rotx90,G4ThreeVector(), q1w_log, "q1w_physical", world_log, false, 0); 
+	double t_q1_window = 0.305*mm;
+	double r_q1 = 15.*cm;
+	double d_q1 = r_chamber + t_chamber + 81.6*cm;
 
+	double z_q1 = d_q1*cos(fHRSAngle);
+	double x_q1 = -d_q1*sin(fHRSAngle);
 
-
+	G4RotationMatrix* rot_HRS = new G4RotationMatrix();
+	rot_HRS->rotateY(fHRSAngle);
+	
+	G4Tubs* q1_tubs = new G4Tubs("q1_tubs", 0., r_q1, t_q1_window/2., 0.*deg, 360.*deg);
+	G4LogicalVolume* q1_log = new G4LogicalVolume(q1_tubs, fMaterial->kapton, "q1_log", 0,0,0);
+	G4VPhysicalVolume* q1_phys = new G4PVPlacement(rot_HRS,G4ThreeVector(x_q1,0.,z_q1), q1_log, "q1_physical", world_log, false, 0);  
+	
+	G4VPhysicalVolume* world_phys
+	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
 
 	return world_phys;
 

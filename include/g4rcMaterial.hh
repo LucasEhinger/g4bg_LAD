@@ -27,6 +27,7 @@ private:
 
 public:
 
+	G4Material* vacuum;
 	G4Material* H2_gas;
 	G4Material* D2_gas;
 	G4Material* T2_gas;

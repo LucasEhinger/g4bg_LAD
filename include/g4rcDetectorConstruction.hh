@@ -15,7 +15,8 @@ public:
 
 
 public:
-	G4String fTarg, fHRS;	
+	G4String fTarg, fHRS;
+	G4double fHRSAngle;	
 
 private:
 	G4double berillium_window;

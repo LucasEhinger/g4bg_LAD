@@ -84,8 +84,14 @@ void g4rcMaterial::ConstructMaterials() {
 	He_gas = new G4Material("He_gas", rho_He, 1, kStateGas, temp, P_He);
 	He_gas->AddElement(He,1);
 
-	// Air
 
+	//A pressure that causes the Hg column to rise 1 millimeter is called ONE torr (1mm Hg)
+	// Vacuum of 1.e-6 torr at room temperature,  1 atmosphere = 101325*pascal = 760 *torr
+	double rho_vacuum = 1.e-6/760.0 * 1.29*mg/cm3; //0.001 of air density
+	double P_vacuum = 1.e-6/760.0 *atmosphere;
+	vacuum = new G4Material("vacuum", 1, 28.97*g/mole, rho_vacuum, kStateGas, 293.15*kelvin, P_vacuum);
+
+	// Air
 	air = new G4Material("Air", 1.29*mg/cm3, 2);
 	air->AddElement(N, 70.*perCent);
 	air->AddElement(O, 30.*perCent);
