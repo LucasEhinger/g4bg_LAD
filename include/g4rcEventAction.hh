@@ -7,6 +7,7 @@
 
 class G4Event;
 class g4rcIO;
+class g4rcSteppingAction;
 
 class g4rcEventAction : public G4UserEventAction
 {
@@ -18,11 +19,13 @@ class g4rcEventAction : public G4UserEventAction
     virtual void BeginOfEventAction(const G4Event*);
     virtual void EndOfEventAction(const G4Event*);
 
-    void SetIO( g4rcIO *io ){ fIO = io; }
+	void SetIO( g4rcIO *io ){ fIO = io; }
+	void SetSteppingAction(g4rcSteppingAction* step) { fStep = step; }
 
   private:
 
-    g4rcIO *fIO;
+	g4rcIO *fIO;
+ 	g4rcSteppingAction* fStep;
 
   public:
 };

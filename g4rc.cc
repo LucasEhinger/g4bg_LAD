@@ -15,9 +15,8 @@
 #include "g4rcPrimaryGeneratorAction.hh"
 #include "g4rcEventAction.hh"
 #include "g4rcSteppingAction.hh"
-#include "g4rcOpticalPhysics.hh"
-
 #include "g4rcDetectorConstruction.hh"
+#include "g4rcUniformScatteringConstructor.hh"
 
 #include "g4rcIO.hh"
 #include "g4rcMessenger.hh"
@@ -25,6 +24,8 @@
 //  Standard physics list
 #include "G4PhysListFactory.hh"
 #include "G4RunManager.hh"
+
+#include "G4StepLimiterPhysics.hh"
 
 #include "G4UnitsTable.hh"
 
@@ -89,7 +90,8 @@ int main(int argc, char** argv){
     G4VModularPhysicsList* physlist = factory.GetReferencePhysList("FTFP_BERT");
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
-    physlist->RegisterPhysics( new g4rcOpticalPhysics() );
+    physlist->RegisterPhysics(new G4StepLimiterPhysics());
+    physlist->RegisterPhysics(new g4rcUniformScatteringConstructor());
 
     //-------------------------------
     // UserAction classes
@@ -110,6 +112,7 @@ int main(int argc, char** argv){
     G4UserSteppingAction* stepping_action = new g4rcSteppingAction;
     runManager->SetUserAction(stepping_action);
     rmmess->SetStepAct((g4rcSteppingAction *) stepping_action);
+    ((g4rcEventAction *) event_action)->SetSteppingAction((g4rcSteppingAction *) stepping_action);
 
     // Initialize Run manager
 		////////////////////////////////////////////////////////////////////////////

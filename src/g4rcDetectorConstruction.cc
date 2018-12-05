@@ -1,29 +1,19 @@
 #include "g4rcDetectorConstruction.hh"
 #include "G4SystemOfUnits.hh"
 #include "g4rcDetector.hh"
-#include "g4rcScintDetector.hh"
 #include "g4rcMaterial.hh"
 #include "G4SDManager.hh"
 #include "G4Material.hh"
 #include "G4MaterialTable.hh"
-#include "G4Element.hh"
-#include "G4ElementTable.hh"
-#include "G4LogicalBorderSurface.hh"
-#include "G4LogicalSkinSurface.hh"
 #include "G4Box.hh"
-#include "G4Trap.hh"
-#include "G4Cons.hh"
 #include "G4Tubs.hh"
-#include "G4Trd.hh"
 #include "G4Polycone.hh"
 #include "G4LogicalVolume.hh"
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
-#include "G4Transform3D.hh"
 #include "G4PVPlacement.hh"
-#include "G4OpticalSurface.hh"
-#include "G4SubtractionSolid.hh"
 #include "G4VisAttributes.hh"
+#include "G4UserLimits.hh"
 
 g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
@@ -156,6 +146,10 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
 	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
+
+	double maxStep = 5.*cm;
+	fStepLimit = new G4UserLimits(maxStep);
+	gas_log->SetUserLimits(fStepLimit);
 
 	// Beryllium window (upstream of target)
 	

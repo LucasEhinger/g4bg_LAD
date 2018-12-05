@@ -1,6 +1,7 @@
 #include "g4rcEventAction.hh"
 #include "g4rcDetectorHit.hh"
 #include "g4rcScintDetectorHit.hh"
+#include "g4rcSteppingAction.hh"
 
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -29,6 +30,8 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 	printf("Event %8d\r", ev->GetEventID() );
 	fflush(stdout);
     }
+
+	fStep->has_scattered = false;
 
     return;
 }

@@ -4,6 +4,7 @@
 #include "G4VUserDetectorConstruction.hh"
 
 class g4rcMaterial;
+class G4UserLimits;
 
 class g4rcDetectorConstruction : public G4VUserDetectorConstruction {
 	
@@ -32,6 +33,8 @@ private:
 	G4double exit_window;
 
 	g4rcMaterial* fMaterial;
+
+	G4UserLimits* fStepLimit;
 
 };
 

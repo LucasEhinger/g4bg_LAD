@@ -5,6 +5,8 @@
 #include "G4UserSteppingAction.hh"
 #include "globals.hh"
 
+class G4Track;
+
 class g4rcSteppingAction : public G4UserSteppingAction
 {
   public:
@@ -15,10 +17,14 @@ class g4rcSteppingAction : public G4UserSteppingAction
 
   private:
     G4bool drawFlag;
+	void Scatter(G4Track*);
 
   public:
     inline void SetDrawFlag(G4bool val)
     { drawFlag = val; };
+
+	G4bool has_scattered;
+
 };
 
 #endif//__QSIMSTEPPINGACTION_HH
