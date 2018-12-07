@@ -2,14 +2,13 @@
 #define G4RCUNIFORMSCATTERING_H
 
 #include "G4VDiscreteProcess.hh"
-#include "G4ParticleChange.hh"
 
 class g4rcUniformScattering : public G4VDiscreteProcess {
 
 public:
 
 	g4rcUniformScattering(const G4String& processName = "UniformScattering");
-	~g4rcUniformScattering();
+	virtual ~g4rcUniformScattering();
 
 private:
 
@@ -18,18 +17,16 @@ private:
 
 	G4double fVertexZ;
 	G4double fThetaCentral;
+	G4bool fHasScattered;
+	G4bool fEcut;
+
+	G4double RadiateInternal(G4double, G4double);
 
 public:
 
-	G4bool IsApplicable(const G4ParticleDefinition&);
-
-	G4double PostStepGetPhysicalInteractionLength(const G4Track&);
-
-	G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*);
-
-	G4ParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
-
-	G4ParticleChange* Scatter(const G4Track&, const G4Step&);
+	virtual G4double GetMeanFreePath(const G4Track&, G4double, G4ForceCondition*) {return -1.;}
+	virtual G4double PostStepGetPhysicalInteractionLength(const G4Track&, G4double, G4ForceCondition*);
+	virtual G4VParticleChange* PostStepDoIt(const G4Track&, const G4Step&);
 
 	void SetVertexZ(G4double);
 	void SetCentralScatteringAngle(G4double);

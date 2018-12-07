@@ -19,6 +19,7 @@ void g4rcUniformScatteringConstructor::ConstructParticle() {
 
 void g4rcUniformScatteringConstructor::ConstructProcess() {
 
+
 	theUniformScatteringProcess = new g4rcUniformScattering();
 
 	G4ProcessManager* pManager = G4Electron::Electron()->GetProcessManager();

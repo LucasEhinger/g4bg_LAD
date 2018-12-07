@@ -17,7 +17,6 @@ class g4rcSteppingAction : public G4UserSteppingAction
 
   private:
     G4bool drawFlag;
-	void Scatter(G4Track*);
 
   public:
     inline void SetDrawFlag(G4bool val)
