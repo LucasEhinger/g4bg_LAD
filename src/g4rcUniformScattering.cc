@@ -82,7 +82,7 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	Ef = -1.*eV;
 	
-	while(Ef < 0.511*MeV) {
+	while(Ef < 100.*MeV) {
 		internal_loss1 = RadiateInternal(Q2_true, Epre);
 		E0 = Epre - internal_loss1;
 		Ef = Q2_true/(2.*E0*(1. - cos(theta)));
