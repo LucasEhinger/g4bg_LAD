@@ -67,7 +67,7 @@ void g4rcPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	zPos = fZ;
 
 	double mass = 0.511*MeV;
-	double p = fEbeam*fEbeam - mass*mass;
+	double p = sqrt(fEbeam*fEbeam - mass*mass);
 
 	fDefaultEvent->ProduceNewParticle(G4ThreeVector(xPos, yPos, zPos), G4ThreeVector(0., 0., p), "e-");
 
