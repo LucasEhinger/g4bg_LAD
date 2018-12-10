@@ -58,31 +58,49 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	aParticleChange.Initialize(aTrack);
 
+	G4double Mp = 938.272*MeV;
+
+	G4double Epre = aTrack.GetTotalEnergy();
+
+	G4double fQ2Min = 0.01*GeV;
+	G4double fQ2Max = 15.*GeV;
 
 	G4double fThetaMin = fThetaCentral - 10.*deg;
-	G4double fThetaMax = fThetaCentral + 10.*deg;
+	G4double fThetaMax = fThetaCentral + 10.*deg;	
+	G4double fCosThMin = cos(fThetaMax);
+	G4double fCosThMax = cos(fThetaMin);
 
 	G4double fPhiMin = -20.*deg;
 	G4double fPhiMax = +20.*deg;
 
-	G4double fCosThMin = cos(fThetaMax);
-	G4double fCosThMax = cos(fThetaMin);
-
-	G4double fEpMin = 2.6*GeV;
-	G4double fEpMax = 3.6*GeV;
-
 	G4double theta = acos(CLHEP::RandFlat::shoot(fCosThMin, fCosThMax));
 	G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
-	G4double Eprime = CLHEP::RandFlat::shoot(fEpMin, fEpMax);
+	G4double Q2_true = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
 
-	aParticleChange.ProposeEnergy(Eprime);
+	G4double internal_loss1;
+	G4double E0, Ef;
+
+	Ef = -1.*eV;
+	
+	while(Ef < 0.511*MeV) {
+		internal_loss1 = RadiateInternal(Q2_true, Epre);
+		E0 = Epre - internal_loss1;
+		Ef = Q2_true/(2.*E0*(1. - cos(theta)));
+	}
+
+	G4double nu_true = E0 - Ef;
+	
+	G4double x_true = Q2_true/(2.*Mp*nu_true);
+
+	G4double internal_loss2 = RadiateInternal(Q2_true, Ef);
+
+	G4double Epost = Ef - internal_loss2;
 
 	G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
 
+	aParticleChange.ProposeEnergy(Epost);
 	aParticleChange.ProposeMomentumDirection(p);
 
-	fHasScattered = true;
-	
 	return &aParticleChange;			
 
 }
