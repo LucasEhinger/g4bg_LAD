@@ -8,6 +8,8 @@
 class G4Event;
 class g4rcIO;
 class g4rcSteppingAction;
+class g4rcUniformScatteringConstructor;
+class g4rcUniformScattering;
 
 class g4rcEventAction : public G4UserEventAction
 {
@@ -21,11 +23,14 @@ class g4rcEventAction : public G4UserEventAction
 
 	void SetIO( g4rcIO *io ){ fIO = io; }
 	void SetSteppingAction(g4rcSteppingAction* step) { fStep = step; }
+	void SetUSConstructor(g4rcUniformScatteringConstructor* usc) { fUSC = usc; }
 
   private:
-
+	
 	g4rcIO *fIO;
  	g4rcSteppingAction* fStep;
+	g4rcUniformScatteringConstructor* fUSC;
+	g4rcUniformScattering* fUS;
 
   public:
 };

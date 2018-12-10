@@ -91,7 +91,9 @@ int main(int argc, char** argv){
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
     physlist->RegisterPhysics(new G4StepLimiterPhysics());
-    physlist->RegisterPhysics(new g4rcUniformScatteringConstructor());
+   
+     g4rcUniformScatteringConstructor* usc = new g4rcUniformScatteringConstructor();
+     physlist->RegisterPhysics(usc);
 
     //-------------------------------
     // UserAction classes
@@ -107,6 +109,7 @@ int main(int argc, char** argv){
 
     G4UserEventAction* event_action = new g4rcEventAction;
     ((g4rcEventAction *) event_action)->SetIO(io);
+    ((g4rcEventAction *) event_action)->SetUSConstructor(usc);
 
     runManager->SetUserAction(event_action);
     G4UserSteppingAction* stepping_action = new g4rcSteppingAction;

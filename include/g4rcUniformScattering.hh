@@ -31,6 +31,14 @@ public:
 	void SetVertexZ(G4double);
 	void SetCentralScatteringAngle(G4double);
 
+	G4double fEpre;
+	G4double fE0;
+	G4double fEp;
+	G4double fEpost;
+	G4double fTheta;
+	G4double fQ2true;
+	G4double fxBtrue;
+
 };
 
 #endif

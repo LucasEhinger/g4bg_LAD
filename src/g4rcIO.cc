@@ -11,6 +11,7 @@
 #include "g4rcDetectorHit.hh"
 #include "g4rcScintDetectorHit.hh"
 #include "g4rcEvent.hh"
+#include "g4rcUniformScattering.hh"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -23,8 +24,9 @@ g4rcIO::g4rcIO(){
     InitializeTree();
     // Default filename
     strcpy(fFilename, "g4rcout.root");
-
     fFile = NULL;
+	fUS = NULL;
+
 }
 
 g4rcIO::~g4rcIO(){
@@ -60,6 +62,17 @@ void g4rcIO::InitializeTree(){
     fTree->Branch("ev.px",    &fEvPart_Px,  "ev.px/D");
     fTree->Branch("ev.py",    &fEvPart_Py,  "ev.py/D");
     fTree->Branch("ev.pz",    &fEvPart_Pz,  "ev.pz/D");
+
+	fTree->Branch("Epre",	&fEpre,		"Epre/D");
+	fTree->Branch("E0",	&fE0,		"E0/D");
+	fTree->Branch("Ep",	&fEp,		"Ep/D");
+	fTree->Branch("Epost",	&fEpost,	"Epost/D");
+	fTree->Branch("theta",	&fTheta,	"theta/D");	
+
+	fTree->Branch("Q2.obs",		&fQ2obs,	"Q2.obs/D");
+	fTree->Branch("xBj.obs",	&fxBobs,	"xBj.obs/D");
+	fTree->Branch("Q2.true",	&fQ2true,	"Q2.true/D");
+	fTree->Branch("xBj.true",	&fxBtrue,	"xBj.true/D");
 
 
     // DetectorHit
@@ -165,6 +178,20 @@ void g4rcIO::SetEventData(g4rcEvent *ev){
     fEvPart_P = ev->fPartMom[0].mag()/__E_UNIT;
 
     return;
+}
+
+
+void g4rcIO::SetScatteringData() {
+
+	fEpre = fUS->fEpre;
+	fE0 = fUS->fE0;	
+	fEp = fUS->fEp;
+	fEpost = fUS->fEpost;
+	fTheta = fUS->fTheta;
+	fQ2true = fUS->fQ2true;
+	fxBtrue = fUS->fxBtrue;
+	fQ2obs = 0.;
+	fxBobs = 0.;
 }
 
 // DetectorHit

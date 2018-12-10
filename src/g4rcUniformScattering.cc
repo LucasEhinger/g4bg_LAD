@@ -96,8 +96,15 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	G4double Epost = Ef - internal_loss2;
 
-	G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
+	fEpre = Epre;
+	fE0 = E0;
+	fEp = Ef;
+	fEpost = Epost;
+	fTheta = theta/deg;
+	fQ2true = Q2_true;
+	fxBtrue = x_true;
 
+	G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
 	aParticleChange.ProposeEnergy(Epost);
 	aParticleChange.ProposeMomentumDirection(p);
 

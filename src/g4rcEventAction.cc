@@ -2,6 +2,7 @@
 #include "g4rcDetectorHit.hh"
 #include "g4rcScintDetectorHit.hh"
 #include "g4rcSteppingAction.hh"
+#include "g4rcUniformScatteringConstructor.hh"
 
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -13,11 +14,17 @@
 #include "G4SDManager.hh"
 #include "G4UImanager.hh"
 #include "G4ios.hh"
+#include "G4SystemOfUnits.hh"
+//#include "Randomize.hh"
+
+#include "CLHEP/Random/RandFlat.h"
+
 
 #include "g4rcIO.hh"
 
 
 g4rcEventAction::g4rcEventAction() {
+	fUS = NULL;
 }
 
 g4rcEventAction::~g4rcEventAction(){
@@ -31,7 +38,14 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 	fflush(stdout);
     }
 
-	fStep->has_scattered = false;
+	if(!fUS) {	
+		fUS = fUSC->GetUniformScatteringProcess();
+		fIO->SetUniformScatteringProcess(fUS);
+	}
+
+
+	G4double vz = CLHEP::RandFlat::shoot(-10.*cm, 10.*cm);
+	fUS->SetVertexZ(vz);
 
     return;
 }
@@ -71,6 +85,9 @@ if(HCE) {
       }
   }
 }
+
+	fIO->SetScatteringData();
+
   // Fill tree and reset buffers
   fIO->FillTree();
   fIO->Flush();
