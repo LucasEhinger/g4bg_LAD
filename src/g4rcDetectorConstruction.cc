@@ -17,32 +17,11 @@
 
 g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
-	fTarg = "T2";
+	fTarg = "H3";
+	GetTargetIndex(fTarg);
 	fHRS = "L";
-	fHRSAngle = 17.5*deg;
+	fHRSAngle = 17.5*deg;    
 
-	if(fHRS=="L") {
-		fHRSAngle*=-1.0;
-	}
-
-	length = 25.0*cm;
-	radius = 0.65*cm;
-
-	if(fTarg == "T2") {
-	entrance_window = 0.253*mm;
-	exit_window = 0.343*mm;
-		if(fHRS == "L") {
-			entrance_wall = 0.473*mm;
-			mid_wall = 0.435*mm;
-			exit_wall = 0.379*mm;
-		} else if(fHRS == "R") {
-			entrance_wall = 0.425*mm;
-			mid_wall = 0.447*mm;
-			exit_wall = 0.406*mm;
-		}
-	}
-		
-    
 }
 
 
@@ -54,7 +33,15 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	fMaterial = g4rcMaterial::GetMaterialManager();
 
+	G4double length = 25.0*cm;
+	G4double radius = 0.65*cm;
+	G4double entrance_window[4]	= {0.311*mm, 0.215*mm, 0.253*mm, 0.203*mm}; 
+	G4double exit_window[4]	        = {0.330*mm, 0.294*mm, 0.343*mm, 0.328*mm};
+	G4double exit_wall[4]	        = {0.240*mm, 0.422*mm, 0.379*mm, 0.438*mm};
+	G4double mid_wall[4]	        = {0.374*mm, 0.447*mm, 0.435*mm, 0.487*mm};
+	G4double entrance_wall[4] 	= {0.456*mm, 0.442*mm, 0.473*mm, 0.504*mm};
 
+	G4Material* target_gas[4] = {fMaterial->H2_gas, fMaterial->D2_gas, fMaterial->T2_gas, fMaterial->He_gas};
 
 	// WORLD LOGICAL
 	
@@ -68,10 +55,6 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	= new G4LogicalVolume(world_box,fMaterial->air,"World",0,0,0);
 
 	world_log->SetVisAttributes(G4VisAttributes::Invisible);
-
-
-
-
 
 	// TARGET CHAMBER
 
@@ -95,21 +78,21 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	// Target cell
 	const int nPoints = 10;
 	double cell_z[nPoints], cell_r[nPoints];
-	
+
 	// outer edge
-	cell_z[0] = -((length/2.) + entrance_window) ;
+	cell_z[0] = -((length/2.) + entrance_window[fTargIndex]) ;
 	cell_r[0] = 0.;
 
-	cell_z[1] = -((length/2.) + entrance_window);
-	cell_r[1] = radius + entrance_wall;
+	cell_z[1] = -((length/2.) + entrance_window[fTargIndex]);
+	cell_r[1] = radius + entrance_wall[fTargIndex];
 
 	cell_z[2] = 0.;
-	cell_r[2] = radius + mid_wall;
+	cell_r[2] = radius + mid_wall[fTargIndex];
 
-	cell_z[3] = (length/2.) + exit_window;
-	cell_r[3] = radius + exit_wall;   
+	cell_z[3] = (length/2.) + exit_window[fTargIndex];
+	cell_r[3] = radius + exit_wall[fTargIndex];   
  
-	cell_z[4] = (length/2.) + exit_window;
+	cell_z[4] = (length/2.) + exit_window[fTargIndex];
 	cell_r[4] = 0.;
 
 	//inner edge
@@ -135,21 +118,11 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// Target gas volume
 	
-	G4Material* target_gas;
-
-	if(fTarg == "T2") {
-		target_gas = fMaterial->T2_gas;
-	}
-
 	G4Tubs* gas_tubs = new G4Tubs("gas_tubs", 0., radius, length/2., 0.*deg, 360.*deg);
-	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas, "gas_logical", 0,0,0);
+	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas[fTargIndex], "gas_logical", 0,0,0);
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
 	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
-
-	double maxStep = 5.*cm;
-	fStepLimit = new G4UserLimits(maxStep);
-	gas_log->SetUserLimits(fStepLimit);
 
 	// Beryllium window (upstream of target)
 	
@@ -164,6 +137,10 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VPhysicalVolume* target_mother_phys 
 	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
 
+
+	if(fHRS=="L") {
+		fHRSAngle*=-1.0;
+	}
 
 	// Q1 entrance window
 	double t_q1_window = 0.305*mm;
@@ -185,7 +162,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// Detector
 	
-	G4Tubs* det_tubs = new G4Tubs("det_tubs",0.,20.*cm,1.*mm,0.*deg,360.*deg);
+	G4Tubs* det_tubs = new G4Tubs("det_tubs",0.,15.*cm,1.*mm,0.*deg,360.*deg);
 	G4LogicalVolume* det_log = new G4LogicalVolume(det_tubs, fMaterial->vacuum, "det_log", 0,0,0);
 		
 	G4SDManager* SDman = G4SDManager::GetSDMpointer();
@@ -193,8 +170,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	SDman->AddNewDetector(detSD);
 	det_log->SetSensitiveDetector(detSD);
 
-	double z_det = (d_q1+5.*cm)*cos(fHRSAngle);
-	double x_det = -(d_q1+5.*cm)*sin(fHRSAngle);
+	double z_det = (d_q1+1.*cm)*cos(fHRSAngle);
+	double x_det = -(d_q1+1.*cm)*sin(fHRSAngle);
 
 	G4VPhysicalVolume* det_phys = new G4PVPlacement(rot_HRS, G4ThreeVector(x_det,0.,z_det), det_log, "det_physical", world_log, false, 0);
 
@@ -202,10 +179,31 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 }
 
+void g4rcDetectorConstruction::GetTargetIndex(G4String targ) {
 
+	fTargIndex = -1;
+	G4String targList[4] = {"H1","H2","H3","He3"};
+
+	for(int i = 0; i<4; i++) {
+		if(targ == targList[i]) {
+			fTargIndex = i;
+		}		
+	}
+
+	if (fTargIndex < 0.) {
+		G4cout << "Bad target selected!" << G4endl;
+		exit(1);
+	}
+}
     
     
-    
-    
+void g4rcDetectorConstruction::SetTarget(G4String targ) {
+	fTarg = targ;
+	GetTargetIndex(fTarg);
+}
+
+
+
+
 
 

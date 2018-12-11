@@ -3,6 +3,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4AffineTransform.hh"
 #include "Randomize.hh"
 
 #include "CLHEP/Random/RandFlat.h"
@@ -54,6 +55,8 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	aParticleChange.Initialize(aTrack);
 
+	G4String targ_name = aTrack.GetVolume()->GetLogicalVolume()->GetMaterial()->GetName();
+
 	if(!fHasScattered) {
 		G4double Mp = 938.272*MeV;
 
@@ -61,8 +64,8 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double Ekin = aTrack.GetKineticEnergy();
 
 		// Choose theta
-		G4double fThetaMin = fThetaCentral - 10.*deg;
-		G4double fThetaMax = fThetaCentral + 10.*deg;	
+		G4double fThetaMin = fThetaCentral - 5.*deg;
+		G4double fThetaMax = fThetaCentral + 5.*deg;	
 		G4double fCosThMin = cos(fThetaMax);
 		G4double fCosThMax = cos(fThetaMin);
 		G4double theta = acos(CLHEP::RandFlat::shoot(fCosThMin, fCosThMax));
@@ -73,8 +76,8 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double Q2_true = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
 
 		// Choose phi;
-		G4double fPhiMin = -20.*deg;
-		G4double fPhiMax = +20.*deg;
+		G4double fPhiMin = -10.*deg;
+		G4double fPhiMax = +10.*deg;
 		G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
 
 		G4double internal_loss1;
@@ -95,15 +98,27 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double internal_loss2 = RadiateInternal(Q2_true, Ekin);
 
 		G4double Epost = Ef - internal_loss2;
+
 		G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
 
+		G4RotationMatrix rotateTarg;
+		rotateTarg.rotateY(-fThetaCentral);
+		rotateTarg.rotateZ(90.*deg);		
+		G4AffineTransform target_transform;
+		target_transform.SetNetRotation(rotateTarg);
+		target_transform.Invert();
+
+		G4ThreeVector p_targ = target_transform.TransformPoint(p);
+	
 		fEpre = Epre;
 		fE0 = E0;
 		fEp = Ef;
 		fEpost = Epost;
-		fTheta = theta/deg;
+		fTheta = theta;
 		fQ2true = Q2_true;
 		fxBtrue = x_true;
+		fThTarg = p_targ.x()/p_targ.z();
+		fPhTarg = p_targ.y()/p_targ.z();
 
 		aParticleChange.ProposeEnergy(Epost);
 		aParticleChange.ProposeMomentumDirection(p);

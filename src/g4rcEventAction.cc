@@ -41,6 +41,7 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 	if(!fUS) {	
 		fUS = fUSC->GetUniformScatteringProcess();
 		fIO->SetUniformScatteringProcess(fUS);
+		fUS->SetCentralScatteringAngle(fHRSAngle);
 	}
 
 
@@ -56,6 +57,8 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
   G4HCofThisEvent *HCE = evt->GetHCofThisEvent();
 
   G4VHitsCollection *thiscol;
+
+	fIO->SetScatteringData();
 
 if(HCE) {
   // Traverse all hit collections, sort by output type
@@ -87,7 +90,6 @@ if(HCE) {
   }
 }
 
-	fIO->SetScatteringData();
 
   // Fill tree and reset buffers
   fIO->FillTree();

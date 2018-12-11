@@ -24,10 +24,10 @@ g4rcPrimaryGeneratorAction::g4rcPrimaryGeneratorAction() {
 
   	G4int n_particle = 1;
 
-	fXmin = -2.*mm;
-	fXmax =  2.*mm;
-	fYmin = -2.*mm;
-	fYmax =  2.*mm;
+	fXmin = -1.*mm;
+	fXmax =  1.*mm;
+	fYmin = -1.*mm;
+	fYmax =  1.*mm;
 	
 	fZ = -35.*cm;
 

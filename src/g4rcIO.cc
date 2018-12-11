@@ -67,7 +67,9 @@ void g4rcIO::InitializeTree(){
 	fTree->Branch("E0",	&fE0,		"E0/D");
 	fTree->Branch("Ep",	&fEp,		"Ep/D");
 	fTree->Branch("Epost",	&fEpost,	"Epost/D");
-	fTree->Branch("theta",	&fTheta,	"theta/D");	
+	fTree->Branch("th_hall",&fTheta,	"th_hall/D");	
+	fTree->Branch("th_targ",&fThTarg,	"th_targ/D");
+	fTree->Branch("ph_targ",&fPhTarg,	"ph_targ/D");
 
 	fTree->Branch("Q2.obs",		&fQ2obs,	"Q2.obs/D");
 	fTree->Branch("xBj.obs",	&fxBobs,	"xBj.obs/D");
@@ -190,8 +192,11 @@ void g4rcIO::SetScatteringData() {
 	fTheta = fUS->fTheta;
 	fQ2true = fUS->fQ2true;
 	fxBtrue = fUS->fxBtrue;
-	fQ2obs = 0.;
-	fxBobs = 0.;
+	fThTarg = fUS->fThTarg;
+	fPhTarg = fUS->fPhTarg;
+	fQ2obs = -333.;
+	fxBobs = -333.;
+	
 }
 
 // DetectorHit
@@ -232,6 +237,15 @@ void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
     fDetHit_P[n]  = hit->fP/__E_UNIT;
     fDetHit_E[n]  = hit->fE/__E_UNIT;
     fDetHit_M[n]  = hit->fM/__E_UNIT;
+
+	if(hit->fTrID == 1) {
+		G4double Mp = 938.272*MeV;
+		G4double E0_obs = 10.6*GeV;
+		G4double Ef_obs = hit->fE;
+		G4double nu_obs = E0_obs - Ef_obs;
+		fQ2obs = 2.*E0_obs*Ef_obs*(1.-cos(fTheta));
+		fxBobs = fQ2obs/(2.*Mp*nu_obs);
+	}
 
     fNDetHit++;
 
