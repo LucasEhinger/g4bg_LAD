@@ -108,6 +108,7 @@ int main(int argc, char** argv){
     runManager->SetUserAction(gen_action);
 
     G4UserEventAction* event_action = new g4rcEventAction;
+    rmmess->SetEvAct((g4rcEventAction* ) event_action);
     ((g4rcEventAction *) event_action)->SetIO(io);
     ((g4rcEventAction *) event_action)->SetUSConstructor(usc);
 

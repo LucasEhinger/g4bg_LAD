@@ -16,6 +16,7 @@ class g4rcDetectorConstruction;
 class g4rcEventAction;
 class g4rcPrimaryGeneratorAction;
 class g4rcSteppingAction;
+class g4rcUniformScatteringConstructor;
 
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
@@ -48,35 +49,10 @@ class g4rcMessenger : public G4UImessenger {
 	
 	G4UIcmdWithAnInteger *seedCmd;
 	G4UIcmdWithAString   *fileCmd;
-	//
-	//G4UIcmdWithAnInteger *fStandModeCmd;
-	G4UIcmdWithAnInteger *fDetModeCmd;
-	G4UIcmdWithAnInteger *fStandModeCmd;
-	G4UIcmdWithAnInteger *fSourceModeCmd;
-	G4UIcmdWithADouble *fQuartzPolishCmd;
-	G4UIcmdWithADoubleAndUnit *fQuartzThick1Cmd;
-	G4UIcmdWithADoubleAndUnit *fQuartzThick2Cmd;
-	G4UIcmdWithABool* fFirstDetCmd;
-	G4UIcmdWithABool* fSecDetCmd;
-	G4UIcmdWithADoubleAndUnit* fSecDetZCmd;
-	G4UIcmdWithADoubleAndUnit *fDetAngleCmd;
-	// POSSCAN
-	G4UIcmdWithADoubleAndUnit *fDetPosXCmd;	
-	G4UIcmdWithADoubleAndUnit *fDetPosYCmd;	
-	//
-	G4UIcmdWithADoubleAndUnit *fXminCmd;
-	G4UIcmdWithADoubleAndUnit *fXmaxCmd;
-	G4UIcmdWithADoubleAndUnit *fYminCmd;
-	G4UIcmdWithADoubleAndUnit *fYmaxCmd;
-	G4UIcmdWithADoubleAndUnit *fEminCmd;
-	G4UIcmdWithADoubleAndUnit *fEmaxCmd;
 
-	G4UIcmdWithADoubleAndUnit *fthetaMinCmd;
-	G4UIcmdWithADoubleAndUnit *fthetaMaxCmd;
-
-//	G4UIcmdWithADoubleAndUnit *fThetaCmd;
-//	G4UIcmdWithADoubleAndUnit *fPhiCmd;
-	G4UIcmdWithADoubleAndUnit *fZCmd;
+	G4UIcmdWithADoubleAndUnit *angleCmd;
+	G4UIcmdWithAString* targCmd;
+	G4UIcmdWithAString* hrsCmd;
 
 };
 

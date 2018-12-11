@@ -4,7 +4,6 @@
 #include "G4VUserDetectorConstruction.hh"
 
 class g4rcMaterial;
-class G4UserLimits;
 
 class g4rcDetectorConstruction : public G4VUserDetectorConstruction {
 	
@@ -14,27 +13,20 @@ public:
 	
 	G4VPhysicalVolume* Construct();
 
+	void SetTarget(G4String);
 
 public:
-	G4String fTarg, fHRS;
+	G4String fHRS;
 	G4double fHRSAngle;	
 
 private:
-	G4double berillium_window;
-	G4double chamber_window;
-	G4double q1_window;
-	// cell parameters
-	G4double length;
-	G4double radius;
-	G4double entrance_window;
-	G4double entrance_wall;
-	G4double mid_wall;
-	G4double exit_wall;
-	G4double exit_window;
+	G4int fTargIndex;
+
+	G4String fTarg;
 
 	g4rcMaterial* fMaterial;
 
-	G4UserLimits* fStepLimit;
+	void GetTargetIndex(G4String);
 
 };
 

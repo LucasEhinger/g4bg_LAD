@@ -17,7 +17,6 @@ private:
 
 	G4double fVertexZ;
 	G4double fThetaCentral;
-	G4bool fHasScattered;
 	G4bool fEcut;
 
 	G4double RadiateInternal(G4double, G4double);
@@ -31,6 +30,7 @@ public:
 	void SetVertexZ(G4double);
 	void SetCentralScatteringAngle(G4double);
 
+	G4bool fHasScattered;
 	G4double fEpre;
 	G4double fE0;
 	G4double fEp;
@@ -38,6 +38,8 @@ public:
 	G4double fTheta;
 	G4double fQ2true;
 	G4double fxBtrue;
+	G4double fThTarg;
+	G4double fPhTarg;
 
 };
 

@@ -74,6 +74,8 @@ class g4rcIO {
 	Double_t fEp;
 	Double_t fEpost;
 	Double_t fTheta;
+	Double_t fThTarg;
+	Double_t fPhTarg;
 	
 	Double_t fQ2obs;
 	Double_t fxBobs;
