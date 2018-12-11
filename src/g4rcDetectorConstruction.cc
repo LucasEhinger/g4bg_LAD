@@ -19,7 +19,7 @@ g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
 	fTarg = "T2";
 	fHRS = "L";
-	fHRSAngle = 0.*deg;
+	fHRSAngle = 17.5*deg;
 
 	if(fHRS=="L") {
 		fHRSAngle*=-1.0;

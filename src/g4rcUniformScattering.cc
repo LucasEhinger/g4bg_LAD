@@ -34,10 +34,6 @@ G4double g4rcUniformScattering::PostStepGetPhysicalInteractionLength(const G4Tra
 
 	G4double length = DBL_MAX;
 
-	if(aTrack.GetCurrentStepNumber()==1 && aTrack.GetTrackID()==1) {
-		fHasScattered = false;
-	}
-
 	// Only limit step if track is primary
 
 	if(aTrack.GetTrackID()==1) {
@@ -58,56 +54,62 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	aParticleChange.Initialize(aTrack);
 
-	G4double Mp = 938.272*MeV;
+	if(!fHasScattered) {
+		G4double Mp = 938.272*MeV;
 
-	G4double Epre = aTrack.GetTotalEnergy();
+		G4double Epre = aTrack.GetTotalEnergy();
+		G4double Ekin = aTrack.GetKineticEnergy();
 
-	G4double fQ2Min = 0.01*GeV;
-	G4double fQ2Max = 15.*GeV;
+		// Choose theta
+		G4double fThetaMin = fThetaCentral - 10.*deg;
+		G4double fThetaMax = fThetaCentral + 10.*deg;	
+		G4double fCosThMin = cos(fThetaMax);
+		G4double fCosThMax = cos(fThetaMin);
+		G4double theta = acos(CLHEP::RandFlat::shoot(fCosThMin, fCosThMax));
 
-	G4double fThetaMin = fThetaCentral - 10.*deg;
-	G4double fThetaMax = fThetaCentral + 10.*deg;	
-	G4double fCosThMin = cos(fThetaMax);
-	G4double fCosThMax = cos(fThetaMin);
+		// Set upper Q2 limit based on angle, and choose Q2
+		G4double fQ2Min = 0.;
+		G4double fQ2Max = 2.*Epre*Epre*(1. - cos(theta));
+		G4double Q2_true = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
 
-	G4double fPhiMin = -20.*deg;
-	G4double fPhiMax = +20.*deg;
+		// Choose phi;
+		G4double fPhiMin = -20.*deg;
+		G4double fPhiMax = +20.*deg;
+		G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
 
-	G4double theta = acos(CLHEP::RandFlat::shoot(fCosThMin, fCosThMax));
-	G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
-	G4double Q2_true = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
+		G4double internal_loss1;
+		G4double E0, Ef, nu_true;
 
-	G4double internal_loss1;
-	G4double E0, Ef;
+		nu_true = -1.;
 
-	Ef = -1.*eV;
-	
-	while(Ef < 100.*MeV) {
-		internal_loss1 = RadiateInternal(Q2_true, Epre);
-		E0 = Epre - internal_loss1;
-		Ef = Q2_true/(2.*E0*(1. - cos(theta)));
+		while(nu_true < 0.) {
+			internal_loss1 = RadiateInternal(Q2_true, Ekin);
+			E0 = Epre - internal_loss1;
+			Ef = Q2_true/(2.*E0*(1. - cos(theta)));
+			nu_true = E0 - Ef;
+		}
+
+		G4double x_true = Q2_true/(2.*Mp*nu_true);
+
+		Ekin = Ekin - internal_loss1 - nu_true;
+		G4double internal_loss2 = RadiateInternal(Q2_true, Ekin);
+
+		G4double Epost = Ef - internal_loss2;
+		G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
+
+		fEpre = Epre;
+		fE0 = E0;
+		fEp = Ef;
+		fEpost = Epost;
+		fTheta = theta/deg;
+		fQ2true = Q2_true;
+		fxBtrue = x_true;
+
+		aParticleChange.ProposeEnergy(Epost);
+		aParticleChange.ProposeMomentumDirection(p);
+
+		fHasScattered = true;
 	}
-
-	G4double nu_true = E0 - Ef;
-	
-	G4double x_true = Q2_true/(2.*Mp*nu_true);
-
-	G4double internal_loss2 = RadiateInternal(Q2_true, Ef);
-
-	G4double Epost = Ef - internal_loss2;
-
-	fEpre = Epre;
-	fE0 = E0;
-	fEp = Ef;
-	fEpost = Epost;
-	fTheta = theta/deg;
-	fQ2true = Q2_true;
-	fxBtrue = x_true;
-
-	G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
-	aParticleChange.ProposeEnergy(Epost);
-	aParticleChange.ProposeMomentumDirection(p);
-
 	return &aParticleChange;			
 
 }

@@ -33,7 +33,7 @@ g4rcEventAction::~g4rcEventAction(){
 
 void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
     // Pretty ongoing status with flush
-    if( (ev->GetEventID() % 100) == 0 ){
+    if( (ev->GetEventID() % 1) == 0 ){
 	printf("Event %8d\r", ev->GetEventID() );
 	fflush(stdout);
     }
@@ -46,6 +46,7 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 
 	G4double vz = CLHEP::RandFlat::shoot(-10.*cm, 10.*cm);
 	fUS->SetVertexZ(vz);
+	fUS->fHasScattered = false;
 
     return;
 }

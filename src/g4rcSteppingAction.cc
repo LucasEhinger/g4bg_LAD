@@ -16,7 +16,7 @@ void g4rcSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
 	G4Track* aTrack = aStep->GetTrack();
 
-	if(aTrack->GetTrackID() != 1) {
+	if(aTrack->GetTrackID() != 1 || aTrack->GetTotalEnergy() < 1.*GeV) {
 		aTrack->SetTrackStatus(fStopAndKill);
 	}
 
