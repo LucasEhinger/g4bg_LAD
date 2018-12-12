@@ -1,4 +1,9 @@
 /vis/open OGLIQt 1200x600
 
+/g4rc/hrs L
+/g4rc/angle 20. deg
+/g4rc/target H1
+/run/initialize 
+
 /control/execute vis/vis.mac
 
