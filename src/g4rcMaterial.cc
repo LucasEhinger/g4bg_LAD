@@ -42,15 +42,16 @@ void g4rcMaterial::ConstructMaterials() {
 	double M_T = 3.02*g/mole;
 	double M_He = 3.02*g/mole; 
 
-	G4Element* H = new G4Element("Hydrogen", "H", 1, M_H);
-	G4Element* D = new G4Element("Deuterium", "D", 1, M_D);
-	G4Element* T = new G4Element("Tritium", "T", 1, M_T);	
-	G4Element* He = new G4Element("Helium", "He", 2, M_He);
-	G4Element* Be = new G4Element("Beryllium", "Be", 4, 9.01*g/mole);
-	G4Element* C = new G4Element("Carbon", "C", 6, 12.01*g/mole);
-	G4Element* N = new G4Element("Nitrogen", "N", 7 , 14.01*g/mole);
-	G4Element* O = new G4Element("Oxygen"  , "O", 8 , 16.00*g/mole);
-	G4Element* Al = new G4Element("Aluminum", "Al", 13, 26.98*g/mole);
+	double Z, A;
+	G4Element* H = new G4Element("Hydrogen","H", 	Z = 1, 	A = M_H);
+	G4Element* D = new G4Element("Deuterium","D", 	Z = 1, 	A = M_D);
+	G4Element* T = new G4Element("Tritium","T", 	Z = 1, 	A = M_T);	
+	G4Element* He = new G4Element("Helium","He", 	Z = 2, 	A = M_He);
+	G4Element* Be = new G4Element("Beryllium","Be",	Z = 4, 	A = 9.01*g/mole);
+	G4Element* C = new G4Element("Carbon", "C", 	Z = 6, 	A = 12.01*g/mole);
+	G4Element* N = new G4Element("Nitrogen", "N", 	Z = 7, 	A = 14.01*g/mole);
+	G4Element* O = new G4Element("Oxygen", "O", 	Z = 8, 	A = 16.00*g/mole);
+	G4Element* Al = new G4Element("Aluminum", "Al",	Z = 13,	A = 26.98*g/mole);
 
 	// Define materials
 
@@ -69,19 +70,17 @@ void g4rcMaterial::ConstructMaterials() {
 	double P_T2 = rho_T2*(R/M_T)*temp;
 	double P_He = rho_He*(R/M_He)*temp;
 
-	H2_gas = new G4Material("H2_gas", rho_H2, 2, kStateGas, temp, P_H2);
-	H2_gas->AddElement(H,1); 
-	H2_gas->AddElement(H,1); 
+	double density, nComp, pressure; 
+	H2_gas = new G4Material("H2_gas", density = rho_H2, nComp = 1, kStateGas, temp, pressure = P_H2);
+	H2_gas->AddElement(H,2); 
 
-	D2_gas = new G4Material("D2_gas", rho_D2, 2, kStateGas, temp, P_D2);
-	D2_gas->AddElement(D,1); 
-	D2_gas->AddElement(D,1); 
+	D2_gas = new G4Material("D2_gas", density = rho_D2, nComp = 1, kStateGas, temp, pressure = P_D2);
+	D2_gas->AddElement(D,2); 
 
-	T2_gas = new G4Material("T2_gas", rho_T2, 2, kStateGas, temp, P_T2);
-	T2_gas->AddElement(T,1); 
-	T2_gas->AddElement(T,1); 
+	T2_gas = new G4Material("T2_gas", density = rho_T2, nComp = 1, kStateGas, temp, pressure = P_T2);
+	T2_gas->AddElement(T,2); 
 
-	He_gas = new G4Material("He_gas", rho_He, 1, kStateGas, temp, P_He);
+	He_gas = new G4Material("He_gas", density = rho_He, nComp = 1, kStateGas, temp, pressure = P_He);
 	He_gas->AddElement(He,1);
 
 
@@ -92,24 +91,24 @@ void g4rcMaterial::ConstructMaterials() {
 	vacuum = new G4Material("vacuum", 1, 28.97*g/mole, rho_vacuum, kStateGas, 293.15*kelvin, P_vacuum);
 
 	// Air
-	air = new G4Material("Air", 1.29*mg/cm3, 2);
-	air->AddElement(N, 70.*perCent);
-	air->AddElement(O, 30.*perCent);
+	air = new G4Material("air", density = 1.225*mg/cm3, nComp = 2, kStateGas, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
+	air->AddElement(N, 80.*perCent);
+	air->AddElement(O, 20.*perCent);
 
 	// Aluminum
-	aluminum = new G4Material("aluminum", 2.7*g/cm3, 1);
+	aluminum = new G4Material("aluminum", density = 2.7*g/cm3, nComp = 1, kStateSolid, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
 	aluminum->AddElement(Al, 1);
 	
 	// Beryllium
-	beryllium = new G4Material("beryllium", 1.85*g/cm3, 1);
+	beryllium = new G4Material("beryllium", density = 1.85*g/cm3, nComp = 1, kStateSolid, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
 	beryllium->AddElement(Be,1); 
 
 	// Kapton
-	kapton = new G4Material("Kapton", 1.42*g/cm3, 4);
+	kapton = new G4Material("kapton", density = 1.42*g/cm3, nComp = 4, kStateSolid, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
 	kapton->AddElement(H, 10);
 	kapton->AddElement(C, 22);
-	kapton->AddElement(O, 5);
 	kapton->AddElement(N, 2);
+	kapton->AddElement(O, 5);
 
 }
 

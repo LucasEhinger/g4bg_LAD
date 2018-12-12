@@ -55,8 +55,6 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	aParticleChange.Initialize(aTrack);
 
-	G4String targ_name = aTrack.GetVolume()->GetLogicalVolume()->GetMaterial()->GetName();
-
 	if(!fHasScattered) {
 		G4double Mp = 938.272*MeV;
 

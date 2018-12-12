@@ -25,8 +25,6 @@
 #include "G4PhysListFactory.hh"
 #include "G4RunManager.hh"
 
-#include "G4StepLimiterPhysics.hh"
-
 #include "G4UnitsTable.hh"
 
 #include "G4RunManagerKernel.hh"
@@ -90,7 +88,6 @@ int main(int argc, char** argv){
     G4VModularPhysicsList* physlist = factory.GetReferencePhysList("FTFP_BERT");
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
-    physlist->RegisterPhysics(new G4StepLimiterPhysics());
    
      g4rcUniformScatteringConstructor* usc = new g4rcUniformScatteringConstructor();
      physlist->RegisterPhysics(usc);
