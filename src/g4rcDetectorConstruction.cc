@@ -112,7 +112,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	cell_r[9] = 0.;
 	
 
-	G4Polycone* cell_polycone = new G4Polycone("cell_polycone", 0.*deg, 180.*deg, nPoints, cell_r, cell_z);
+	G4Polycone* cell_polycone = new G4Polycone("cell_polycone", 0.*deg, 360.*deg, nPoints, cell_r, cell_z);
 	G4LogicalVolume* cell_log = new G4LogicalVolume(cell_polycone, fMaterial->aluminum, "cell_logical",0,0,0);
 	G4VPhysicalVolume* cell_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), cell_log, "cell_physical", target_mother_log, false, 0); 
 
