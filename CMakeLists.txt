@@ -51,12 +51,16 @@ file(GLOB sources ${PROJECT_SOURCE_DIR}/src/g4rc*.cc ${PROJECT_SOURCE_DIR}/src/m
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
+# Set CERN libraries
+set(cernlibs -L/apps/cernlib/x86_64_rhel7/2005/lib -lmathlib -lpacklib -lc -lm)
+
+#----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 #add_executable(g4rc g4rc.cc ${sources} ${headers} g4rcDict.cxx)
 add_executable(g4rc g4rc.cc ${sources} ${headers})
 #add_library(g4rcroot SHARED ${libsources} ${libheaders} g4rcDict.cxx)
-target_link_libraries(g4rc ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+target_link_libraries(g4rc ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${cernlibs})
 #target_link_libraries(g4rcroot ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------

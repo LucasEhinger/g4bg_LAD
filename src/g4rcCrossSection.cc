@@ -23,17 +23,17 @@ g4rcCrossSection::~g4rcCrossSection() {
 G4double g4rcCrossSection::CalculateCrossSection(G4double theta, G4double Eprime) {
 
 
-	float E0 = 10.6;
+	float E0 = 10.589;
 	float Ep = Eprime/GeV;
 	float th = theta/deg;
 	int Z = 1;
-	int A = 2;
-	float M = 1.809;
-	int xf = 3;
+	int A = 1;
+	float M = 0.93828;
+	int xf = 1;
 	int model = 1;
 
 	float mod_xs = sigmodel_calc_(&E0, &Ep, &th, &Z, &A, &M, &xf, &model); 
-	std::cout << "GEANT4 Ep = " << Ep << "\n\n";	
+
 	return mod_xs;
 
 }

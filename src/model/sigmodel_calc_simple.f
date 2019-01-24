@@ -1,4 +1,4 @@
-        FUNCTION sigmodel_calc(e1pass,e2pass,thpass,zpass,apass,mpass,xflag,model)
+	FUNCTION sigmodel_calc(e1pass,e2pass,thpass,zpass,apass,mpass,xflag,model)
 C       +______________________________________________________________________________
 c	
 C       Calculate cross section using Peter's F1F209.f routine
@@ -20,7 +20,7 @@ C       ________________________________________________________________________
 	include 'math_physics.inc'
 
 C       Declare arguments.
-        real sigmodel_calc
+
 	real*8		e1,e2,th,a,z,m_tgt
 	real*4          e1pass,e2pass,thpass,mpass
 	real*4          sig,factpass,sig_dis_pass,sig_qe_pass
@@ -28,7 +28,7 @@ C       Declare arguments.
 	logical		modelhack
 
 C       Declare locals.
-
+        real sigmodel_calc
 	real*8	 	sig_qe,sig_dis,y,normfac,fact
         real*8		thr,cs,sn,tn,elastic_peak
 	real*8          Q2,nu,WSQ, x
@@ -187,9 +187,10 @@ c	   sig_qe=sig_qe/0.8
 
 	sig = sig_qe + sig_dis !sig is already real*4
 
-
 	sig_qe_pass = sig_qe ! pass back as real*4
 	sig_dis_pass = sig_dis
+
+        sigmodel_calc = sig
 
 	return
 	end
