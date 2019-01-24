@@ -16,6 +16,7 @@ class TTree;
 class g4rcDetectorHit;
 class g4rcScintDetectorHit;
 class g4rcUniformScattering;
+class g4rcCrossSection;
 
 #define __IO_MAXHIT 10000
 #define __FILENAMELEN 255
@@ -50,6 +51,7 @@ class g4rcIO {
 	char fFilename[__FILENAMELEN];
 
 	g4rcUniformScattering* fUS;
+	g4rcCrossSection* fXS;
 
 	//  Interfaces and buffers to the tree
 	//  This is potentially going to get very long...

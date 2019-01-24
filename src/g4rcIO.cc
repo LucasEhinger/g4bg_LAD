@@ -12,6 +12,7 @@
 #include "g4rcScintDetectorHit.hh"
 #include "g4rcEvent.hh"
 #include "g4rcUniformScattering.hh"
+#include "g4rcCrossSection.hh"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -26,7 +27,7 @@ g4rcIO::g4rcIO(){
     strcpy(fFilename, "g4rcout.root");
     fFile = NULL;
 	fUS = NULL;
-
+	fXS = new g4rcCrossSection("bodek");
 }
 
 g4rcIO::~g4rcIO(){
@@ -194,8 +195,10 @@ void g4rcIO::SetScatteringData() {
 	fxBtrue = fUS->fxBtrue;
 	fThTarg = fUS->fThTarg;
 	fPhTarg = fUS->fPhTarg;
+	G4double xs = fXS->CalculateCrossSection(fTheta, fEp);
 	fQ2obs = -333.;
 	fxBobs = -333.;
+
 	
 }
 

@@ -5,6 +5,7 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(G4RC)
 
+enable_language (Fortran)
 
 #ROOT path
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -34,6 +35,7 @@ include(${Geant4_USE_FILE})
 
 #debugging symbols, complains
 set(CMAKE_CXX_FLAGS "-ggdb -Wall -O0")
+set(CMAKE_Fortran_FLAGS "-C -g -w -fno-automatic -fbounds-check -ffixed-line-length-132")
 
 #----------------------------------------------------------------------------
 # Generate dictionaries as well (so we can write objects to ROOT files
@@ -45,7 +47,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CU
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/g4rc*.cc)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/g4rc*.cc ${PROJECT_SOURCE_DIR}/src/model/*.f)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
