@@ -17,6 +17,7 @@
 #include "g4rcSteppingAction.hh"
 #include "g4rcDetectorConstruction.hh"
 #include "g4rcUniformScatteringConstructor.hh"
+#include "g4rcCrossSection.hh"
 
 #include "g4rcIO.hh"
 #include "g4rcMessenger.hh"
@@ -91,6 +92,10 @@ int main(int argc, char** argv){
    
      g4rcUniformScatteringConstructor* usc = new g4rcUniformScatteringConstructor();
      physlist->RegisterPhysics(usc);
+
+	g4rcCrossSection* xs = new g4rcCrossSection();
+	rmmess->SetXS(xs);
+	io->SetCrossSection(xs);
 
     //-------------------------------
     // UserAction classes

@@ -11,6 +11,7 @@
 #include "g4rcEventAction.hh"
 #include "g4rcPrimaryGeneratorAction.hh"
 #include "g4rcSteppingAction.hh"
+#include "g4rcCrossSection.hh"
 
 #include "G4UImanager.hh"
 #include "G4UIdirectory.hh"
@@ -28,6 +29,7 @@ g4rcMessenger::g4rcMessenger(){
 	fevact        = NULL;
 	fprigen       = NULL;
 	fStepAct      = NULL;
+	fXS	      = NULL;
 
 	fRemollDir = new G4UIdirectory("/g4rc/");
 	fRemollDir->SetGuidance("UI commands of this code");
@@ -73,11 +75,13 @@ void g4rcMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	if (cmd == angleCmd ) {
 		G4double angle = angleCmd->GetNewDoubleValue(newValue);
 		fdetcon->fHRSAngle = angle;
-		fevact->fHRSAngle = angle;	
+		fevact->fHRSAngle = angle;
+		fIO->fHRSangle = angle;	
 	}
 
 	if (cmd == targCmd) {
 		fdetcon->SetTarget(newValue);
+		fXS->SetTarget(newValue);
 	}
 
 	if (cmd == hrsCmd) {

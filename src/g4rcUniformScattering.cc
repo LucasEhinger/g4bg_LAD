@@ -3,7 +3,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ThreeVector.hh"
 #include "G4PhysicalConstants.hh"
-#include "G4AffineTransform.hh"
 #include "Randomize.hh"
 
 #include "CLHEP/Random/RandFlat.h"
@@ -56,7 +55,6 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 	aParticleChange.Initialize(aTrack);
 
 	if(!fHasScattered) {
-		G4double Mp = 938.272*MeV;
 
 		G4double Epre = aTrack.GetTotalEnergy();
 		G4double Ekin = aTrack.GetKineticEnergy();
@@ -90,8 +88,6 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 			nu_true = E0 - Ef;
 		}
 
-		G4double x_true = Q2_true/(2.*Mp*nu_true);
-
 		Ekin = Ekin - internal_loss1 - nu_true;
 		G4double internal_loss2 = RadiateInternal(Q2_true, Ekin);
 
@@ -99,25 +95,14 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 		G4ThreeVector p = G4ThreeVector(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
 
-		G4RotationMatrix rotateTarg;
-		rotateTarg.rotateY(-fThetaCentral);
-		rotateTarg.rotateZ(90.*deg);		
-		G4AffineTransform target_transform;
-		target_transform.SetNetRotation(rotateTarg);
-		target_transform.Invert();
-
-		G4ThreeVector p_targ = target_transform.TransformPoint(p);
-	
 		fEpre = Epre;
 		fE0 = E0;
 		fEp = Ef;
 		fEpost = Epost;
 		fTheta = theta;
+		fPhi = phi;
 		fQ2true = Q2_true;
-		fxBtrue = x_true;
-		fThTarg = p_targ.x()/p_targ.z();
-		fPhTarg = p_targ.y()/p_targ.z();
-
+		
 		aParticleChange.ProposeEnergy(Epost);
 		aParticleChange.ProposeMomentumDirection(p);
 

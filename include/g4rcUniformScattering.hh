@@ -16,8 +16,8 @@ private:
 	g4rcUniformScattering& operator=(const g4rcUniformScattering &right);
 
 	G4double fVertexZ;
-	G4double fThetaCentral;
 	G4bool fEcut;
+	G4double fThetaCentral;
 
 	G4double RadiateInternal(G4double, G4double);
 
@@ -36,6 +36,7 @@ public:
 	G4double fEp;
 	G4double fEpost;
 	G4double fTheta;
+	G4double fPhi;
 	G4double fQ2true;
 	G4double fxBtrue;
 	G4double fThTarg;

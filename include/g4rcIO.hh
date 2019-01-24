@@ -43,6 +43,7 @@ class g4rcIO {
 	void WriteRun();
 
 	void InitializeTree();
+	Double_t fHRSangle;	
 
     private:
 	TFile *fFile;
@@ -61,6 +62,7 @@ class g4rcIO {
 	void SetEventData(g4rcEvent *);
 	void SetScatteringData();
 	void SetUniformScatteringProcess(g4rcUniformScattering* us) { fUS = us; }
+	void SetCrossSection(g4rcCrossSection* xs) {fXS = xs;}
     private:
 	Double_t fEvPart_X;
 	Double_t fEvPart_Y;
@@ -71,19 +73,33 @@ class g4rcIO {
 	Double_t fEvPart_Pz;
 	Int_t fEvPart_PID;
 
-	Double_t fEpre;
 	Double_t fE0;
 	Double_t fEp;
+	Double_t fEpre;
 	Double_t fEpost;
-	Double_t fTheta;
-	Double_t fThTarg;
-	Double_t fPhTarg;
+	Double_t fEobs;
+
+	Double_t fTh0_HCS;
+	Double_t fPh0_HCS;
+	Double_t fTh0_TCS;
+	Double_t fPh0_TCS;
+	
+	Double_t fThObs_HCS;
+	Double_t fPhObs_HCS;
+	Double_t fThObs_TCS;
+	Double_t fPhObs_TCS;
 	
 	Double_t fQ2obs;
 	Double_t fxBobs;
 	Double_t fQ2true;
 	Double_t fxBtrue;
+	
+	Double_t fXSTrueBodek;
+	Double_t fXSObsBodek;
+	Double_t fXSTrueChristy;
+	Double_t fXSObsChristy;	
 
+	bool fDetectedElectron;
 
 	//  DetectorHit
     public:

@@ -7,19 +7,25 @@ class g4rcCrossSection {
 
 public:
 
-	g4rcCrossSection(G4String);
+	g4rcCrossSection();
 	~g4rcCrossSection();	
 
 
 private:
 
-	G4String fModel;
+	int Z;
+	int A;
+	float M;
+	int xf;
+	
+
+	G4String fTarget;
 
 
 public:
 
-	G4double CalculateCrossSection(G4double, G4double);
-		
+	G4double CalculateCrossSection(double, double, double, G4String);
+	void SetTarget(G4String);
 
 };
 
