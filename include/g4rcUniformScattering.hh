@@ -37,10 +37,7 @@ public:
 	G4double fEpost;
 	G4double fTheta;
 	G4double fPhi;
-	G4double fQ2true;
-	G4double fxBtrue;
-	G4double fThTarg;
-	G4double fPhTarg;
+	G4double fQ2born;
 
 };
 

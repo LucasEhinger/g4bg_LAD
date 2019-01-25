@@ -1,5 +1,5 @@
 #include "g4rcCrossSection.hh"
-
+#include <stdlib.h>
 #include <iostream>
 
 #include "G4SystemOfUnits.hh"
@@ -35,11 +35,11 @@ G4double g4rcCrossSection::CalculateCrossSection(double pE0, double pEp, double 
 
 	int model;
 
-	if(pModel == "bodek") {
+	if(pModel == "ineft") {
 
 		model = 1;
 
-	} else if(pModel == "christy") {
+	} else if(pModel == "gsmear") {
 
 		if(fTarget == "H2") {
 			model = 3;
@@ -52,11 +52,11 @@ G4double g4rcCrossSection::CalculateCrossSection(double pE0, double pEp, double 
 		exit(1);
 	}
 
-	float E0 = pE0/GeV;
-	float Ep = pEp/GeV;
+	float E0 = pE0;
+	float Ep = pEp;
 	float th = pTh/deg;
 
-	G4cout << "E0 = " << E0 << "\tEp = " << Ep << "\tth = " << th << G4endl;
+//	G4cout << "E0 = " << E0 << "\tEp = " << Ep << "\tth = " << th << G4endl;
 	
 	float mod_xs = sigmodel_calc_(&E0, &Ep, &th, &Z, &A, &M, &xf, &model); 
 

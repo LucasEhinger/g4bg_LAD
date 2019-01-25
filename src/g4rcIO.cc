@@ -25,7 +25,7 @@ g4rcIO::g4rcIO(){
     fTree = NULL;
     InitializeTree();
     // Default filename
-    // strcpy(fFilename, "g4rcout.root");
+     	strcpy(fFilename, "g4rcout.root");
 	fDetectedElectron = false;
 	fHRSangle = 17.5*deg;
 	fFile = NULL;
@@ -72,10 +72,10 @@ void g4rcIO::InitializeTree(){
 	fTree->Branch("Ep",	&fEp,		"Ep/D");
 	fTree->Branch("Epost",	&fEpost,	"Epost/D");
 
-	fTree->Branch("thHall.true",	&fTh0_HCS,	"thHall.true/D");	
-	fTree->Branch("phHall.true",	&fPh0_HCS,	"phHall.true/D");	
-	fTree->Branch("thTarg.true",	&fTh0_TCS,	"thHall.true/D");	
-	fTree->Branch("phTarg.true",	&fPh0_TCS,	"phHall.true/D");	
+	fTree->Branch("thHall.born",	&fTh0_HCS,	"thHall.born/D");	
+	fTree->Branch("phHall.born",	&fPh0_HCS,	"phHall.born/D");	
+	fTree->Branch("thTarg.born",	&fTh0_TCS,	"thHall.born/D");	
+	fTree->Branch("phTarg.born",	&fPh0_TCS,	"phHall.born/D");	
 	
 	fTree->Branch("thHall.obs",	&fThObs_HCS,	"thHall.obs/D");	
 	fTree->Branch("phHall.obs",	&fPhObs_HCS,	"phHall.obs/D");	
@@ -84,13 +84,13 @@ void g4rcIO::InitializeTree(){
 
 	fTree->Branch("Q2.obs",		&fQ2obs,	"Q2.obs/D");
 	fTree->Branch("xBj.obs",	&fxBobs,	"xBj.obs/D");
-	fTree->Branch("Q2.true",	&fQ2true,	"Q2.true/D");
-	fTree->Branch("xBj.true",	&fxBtrue,	"xBj.true/D");
+	fTree->Branch("Q2.born",	&fQ2born,	"Q2.born/D");
+	fTree->Branch("xBj.born",	&fxBborn,	"xBj.born/D");
 
-	fTree->Branch("xs.true.bodek",		&fXSTrueBodek,		"xs.true.bodek/D");
-	fTree->Branch("xs.obs.bodek",		&fXSObsBodek,		"xs.obs.bodek/D");
-	fTree->Branch("xs.true.christy",	&fXSTrueChristy,	"xs.true.christy/D");
-	fTree->Branch("xs.obs.christy",		&fXSObsChristy,		"xs.obs.christy/D");
+	fTree->Branch("xs.born.ineft",		&fXSBornIneft,		"xs.born.ineft/D");
+	fTree->Branch("xs.obs.ineft",		&fXSObsIneft,		"xs.obs.ineft/D");
+	fTree->Branch("xs.born.gsmear",		&fXSBornGsmear,		"xs.born.gsmear/D");
+	fTree->Branch("xs.obs.gsmear",		&fXSObsGsmear,		"xs.obs.gsmear/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -213,27 +213,27 @@ void g4rcIO::SetScatteringData() {
  * 	fPhObs_TCS	
 */
 
-	// Get energies (all in GeV)
-	fEpre = fUS->fEpre;
-	fE0 = fUS->fE0;	
-	fEp = fUS->fEp;
-	fEpost = fUS->fEpost;
+	// Get energies (convert to GeV)
+	fEpre = fUS->fEpre/GeV;
+	fE0 = fUS->fE0/GeV;	
+	fEp = fUS->fEp/GeV;
+	fEpost = fUS->fEpost/GeV;
 
-	G4double nuTrue = fEp - fE0;
+	G4double nuBorn = fE0 - fEp;
 
-	// Get true event angles (hall coordinates)
+	// Get born event angles (hall coordinates)
 	fTh0_HCS = fUS->fTheta;
 	fPh0_HCS = fUS->fPhi;	
 
-	// Get or calculate true event x and Q2
-	fQ2true = fUS->fQ2true;
-	fxBtrue = fQ2true/(2.*Mp*nuTrue);
+	// Get or calculate born event x and Q2
+	fQ2born = fUS->fQ2born/(GeV*GeV);
+	fxBborn = fQ2born/(2.*Mp*nuBorn);
 
-	// Calculate true event cross sections
-	fXSTrueBodek = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "bodek");
-	fXSTrueChristy = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "christy");
+	// Calculate born event cross sections
+	fXSBornIneft = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "ineft");
+	fXSBornGsmear = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "gsmear");
 
-	// Calculate true event angles in TRANSPORT coordinates
+	// Calculate born event angles in TRANSPORT coordinates
 	G4ThreeVector p0_HCS = G4ThreeVector(sin(fTh0_HCS)*cos(fPh0_HCS), sin(fTh0_HCS)*sin(fPh0_HCS), cos(fPh0_HCS));
 
 	G4RotationMatrix rotateTarg;
@@ -253,15 +253,15 @@ void g4rcIO::SetScatteringData() {
 		G4double nuObs = fEbeam - fEobs;
 		fQ2obs = 2.*fEbeam*fEobs*(1. - cos(fThObs_HCS));
 		fxBobs = fQ2obs/(2.*Mp*nuObs);
-		fXSObsBodek = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "bodek");
-		fXSObsChristy = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "christy");
+		fXSObsIneft = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "ineft");
+		fXSObsGsmear = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "gsmear");
 		G4ThreeVector pObs_HCS = G4ThreeVector(sin(fThObs_HCS)*cos(fPhObs_HCS), sin(fThObs_HCS)*sin(fPhObs_HCS), cos(fPhObs_HCS));
 		G4ThreeVector pObs_TCS = target_transform.TransformPoint(pObs_HCS);
 		fThObs_TCS = pObs_TCS.x()/pObs_TCS.z();
 		fPhObs_TCS = pObs_TCS.y()/pObs_TCS.z();	
 	} else {
 
-		fQ2obs = fxBobs = fXSObsBodek = fXSObsChristy = fThObs_TCS = fPhObs_TCS = fThObs_HCS = fPhObs_HCS = fEobs = -333.;
+		fQ2obs = fxBobs = fXSObsIneft = fXSObsGsmear = fThObs_TCS = fPhObs_TCS = fThObs_HCS = fPhObs_HCS = fEobs = -333.;
 
 	}
 
@@ -309,7 +309,7 @@ void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
     fDetHit_M[n]  = hit->fM/__E_UNIT;
 
 	if(hit->fTrID == 1) {
-		fEobs = hit->fE;
+		fEobs = hit->fE; // Already in GeV from /__E_UNIT
 		fThObs_HCS = hit->f3P.theta();
 		fPhObs_HCS = hit->f3P.phi();
 		fDetectedElectron = true;

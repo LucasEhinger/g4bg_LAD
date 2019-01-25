@@ -1,12 +1,5 @@
 /*!
-  g4rc - Quartz Detector Simluation
-
-  Seamus Riordan, et al.
-  riordan@jlab.org
-
-  Based on prexsim by Jon Wexler and Luis Mercado
-  and remoll
-
+  g4rc - Simulation of radiative effects for JLab tritium experiments
 */
 
 #include "CLHEP/Random/Random.h"
@@ -94,7 +87,7 @@ int main(int argc, char** argv){
      physlist->RegisterPhysics(usc);
 
 	g4rcCrossSection* xs = new g4rcCrossSection();
-	rmmess->SetXS(xs);
+	rmmess->SetCrossSection(xs);
 	io->SetCrossSection(xs);
 
     //-------------------------------

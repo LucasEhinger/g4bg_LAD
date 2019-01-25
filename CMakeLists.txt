@@ -52,7 +52,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Set CERN libraries
-set(cernlibs -L/apps/cernlib/x86_64_rhel7/2005/lib -lmathlib -lpacklib -lc -lm)
+set(cernlibs -L/share/apps/cernlib/x86_64-slc5/2006b/lib -lmathlib -lpacklib -lc -lm)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
@@ -84,6 +84,7 @@ set(G4RC_SCRIPTS
     macros/runscript.sh
     macros/handler.sh
 	macros/merger.sh
+	cdbn.qwave
 )
 
 foreach(_script ${G4RC_SCRIPTS})

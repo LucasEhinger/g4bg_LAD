@@ -44,7 +44,6 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 		fUS->SetCentralScatteringAngle(fHRSAngle);
 	}
 
-
 	G4double vz = CLHEP::RandFlat::shoot(-10.*cm, 10.*cm);
 	fUS->SetVertexZ(vz);
 	fUS->fHasScattered = false;
@@ -53,49 +52,48 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 }
 
 void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
-  //G4SDManager   *SDman = G4SDManager::GetSDMpointer();
-  G4HCofThisEvent *HCE = evt->GetHCofThisEvent();
 
-  G4VHitsCollection *thiscol;
+	//G4SDManager   *SDman = G4SDManager::GetSDMpointer();
+	G4HCofThisEvent *HCE = evt->GetHCofThisEvent();
 
+	G4VHitsCollection *thiscol;
 
-if(HCE) {
-  // Traverse all hit collections, sort by output type
-  for( int hcidx = 0; hcidx < HCE->GetCapacity(); hcidx++ ){
-      thiscol = HCE->GetHC(hcidx);
-      if(thiscol){ // This is NULL if nothing is stored
-	  // Dyanmic cast to test types, process however see fit and feed to IO
-	  
-	  ////  Detector Hits ///////////////////////////////////
-	  if( g4rcDetectorHitsCollection *thiscast = 
-		  dynamic_cast<g4rcDetectorHitsCollection *>(thiscol)){
-	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddDetectorHit(
-			  (g4rcDetectorHit *) thiscast->GetHit(hidx) );
+	if(HCE) {
+	  // Traverse all hit collections, sort by output type
+	  for( int hcidx = 0; hcidx < HCE->GetCapacity(); hcidx++ ){
+	      thiscol = HCE->GetHC(hcidx);
+	      if(thiscol){ // This is NULL if nothing is stored
+		  // Dyanmic cast to test types, process however see fit and feed to IO
+		  
+		  ////  Detector Hits ///////////////////////////////////
+		  if( g4rcDetectorHitsCollection *thiscast = 
+			  dynamic_cast<g4rcDetectorHitsCollection *>(thiscol)){
+		      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+			  fIO->AddDetectorHit(
+				  (g4rcDetectorHit *) thiscast->GetHit(hidx) );
+		      }
+		  }
+		  
+		  ////  Scint Generic Detector Hits ///////////////////////////////////
+		  if( g4rcScintDetectorHitsCollection *thiscast =
+			  dynamic_cast<g4rcScintDetectorHitsCollection *>(thiscol)){
+		      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
+			  fIO->AddScintDetectorHit(
+				  (g4rcScintDetectorHit *) thiscast->GetHit(hidx) );
+		      }
+		  }
 	      }
 	  }
-	  
-	  ////  Scint Generic Detector Hits ///////////////////////////////////
-	  if( g4rcScintDetectorHitsCollection *thiscast =
-		  dynamic_cast<g4rcScintDetectorHitsCollection *>(thiscol)){
-	      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-		  fIO->AddScintDetectorHit(
-			  (g4rcScintDetectorHit *) thiscast->GetHit(hidx) );
-	      }
-	  }
-
-
-      }
-  }
-}
+	}
 
 	fIO->SetScatteringData();
 
-  // Fill tree and reset buffers
-  fIO->FillTree();
-  fIO->Flush();
+	// Fill tree and reset buffers
+	fIO->FillTree();
+	fIO->Flush();
 
-  return;
+	return;
+
 }
 
 

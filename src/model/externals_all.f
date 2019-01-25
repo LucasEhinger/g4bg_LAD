@@ -6473,7 +6473,7 @@ C      SIGTOTER = SQRT(SIGTOTER)
       IF ((Q2.LT..566).OR.(X.LT..062).OR.(X.LT.Q2/(2.*.93828*21.))      
      >   .OR.(X.GT.1./((3.-.93828**2)/Q2+1.)))     THEN                 
                                                                         
-         WRITE(*,'('' WARNING[F1990]: OUTSIDE RECOMMENDED RANGE.'')')  
+         WRITE(*,'('' EXTERNALS_ALL WARNING[F1990]: OUTSIDE RECOMMENDED RANGE.'')')  
           GOODFIT=.FALSE.                                               
       ENDIF                                                             
 

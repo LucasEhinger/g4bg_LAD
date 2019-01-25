@@ -13,10 +13,8 @@ g4rcUniformScattering::g4rcUniformScattering(const G4String& processName)
  : G4VDiscreteProcess(processName, fNotDefined) {
 
 	fVertexZ = 7.5*cm;
-	fThetaCentral = 17.5*deg;
-
 	fEcut = 1.*MeV;
-
+	fThetaCentral = 17.5*deg;
 	fHasScattered = false;
 	
 }
@@ -69,7 +67,7 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		// Set upper Q2 limit based on angle, and choose Q2
 		G4double fQ2Min = 0.;
 		G4double fQ2Max = 2.*Epre*Epre*(1. - cos(theta));
-		G4double Q2_true = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
+		G4double Q2_born = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
 
 		// Choose phi;
 		G4double fPhiMin = -10.*deg;
@@ -77,19 +75,19 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
 
 		G4double internal_loss1;
-		G4double E0, Ef, nu_true;
+		G4double E0, Ef, nu_true, x_born;
 
 		nu_true = -1.;
 
 		while(nu_true < 0.) {
-			internal_loss1 = RadiateInternal(Q2_true, Ekin);
+			internal_loss1 = RadiateInternal(Q2_born, Ekin);
 			E0 = Epre - internal_loss1;
-			Ef = Q2_true/(2.*E0*(1. - cos(theta)));
+			Ef = Q2_born/(2.*E0*(1. - cos(theta)));
 			nu_true = E0 - Ef;
 		}
 
 		Ekin = Ekin - internal_loss1 - nu_true;
-		G4double internal_loss2 = RadiateInternal(Q2_true, Ekin);
+		G4double internal_loss2 = RadiateInternal(Q2_born, Ekin);
 
 		G4double Epost = Ef - internal_loss2;
 
@@ -101,7 +99,7 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		fEpost = Epost;
 		fTheta = theta;
 		fPhi = phi;
-		fQ2true = Q2_true;
+		fQ2born = Q2_born;
 		
 		aParticleChange.ProposeEnergy(Epost);
 		aParticleChange.ProposeMomentumDirection(p);

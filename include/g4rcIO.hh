@@ -91,13 +91,13 @@ class g4rcIO {
 	
 	Double_t fQ2obs;
 	Double_t fxBobs;
-	Double_t fQ2true;
-	Double_t fxBtrue;
+	Double_t fQ2born;
+	Double_t fxBborn;
 	
-	Double_t fXSTrueBodek;
-	Double_t fXSObsBodek;
-	Double_t fXSTrueChristy;
-	Double_t fXSObsChristy;	
+	Double_t fXSBornIneft;
+	Double_t fXSObsIneft;
+	Double_t fXSBornGsmear;
+	Double_t fXSObsGsmear;	
 
 	bool fDetectedElectron;
 

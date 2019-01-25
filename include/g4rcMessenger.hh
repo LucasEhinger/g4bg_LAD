@@ -36,7 +36,7 @@ class g4rcMessenger : public G4UImessenger {
 	void SetDetCon( g4rcDetectorConstruction *dc ){ fdetcon= dc; }
 	void SetEvAct( g4rcEventAction *ev ){ fevact = ev; }
 	void SetStepAct( g4rcSteppingAction *st ){ fStepAct = st; }
-	void SetXS( g4rcCrossSection *xs ){ fXS = xs; }
+	void SetCrossSection( g4rcCrossSection* xs ){ fXS = xs; }
 
 	void SetNewValue(G4UIcommand* cmd, G4String newValue);
 
