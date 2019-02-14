@@ -73,6 +73,7 @@ class g4rcIO {
 	Double_t fEvPart_Pz;
 	Int_t fEvPart_PID;
 
+	Double_t fEbeam;
 	Double_t fE0;
 	Double_t fEp;
 	Double_t fEpre;

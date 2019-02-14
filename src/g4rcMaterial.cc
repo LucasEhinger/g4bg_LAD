@@ -62,7 +62,7 @@ void g4rcMaterial::ConstructMaterials() {
 	double rho_D2 = 5.686*mg/cm3;
 	double rho_T2 = 3.404*mg/cm3; 
 	double rho_He = 2.135*mg/cm3;
-	
+
 	double temp = 45.0*kelvin;
 
 	double P_H2 = rho_H2*(R/M_H)*temp;
