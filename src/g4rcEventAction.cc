@@ -1,6 +1,5 @@
 #include "g4rcEventAction.hh"
 #include "g4rcDetectorHit.hh"
-#include "g4rcScintDetectorHit.hh"
 #include "g4rcSteppingAction.hh"
 #include "g4rcUniformScatteringConstructor.hh"
 
@@ -74,14 +73,6 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
 		      }
 		  }
 		  
-		  ////  Scint Generic Detector Hits ///////////////////////////////////
-		  if( g4rcScintDetectorHitsCollection *thiscast =
-			  dynamic_cast<g4rcScintDetectorHitsCollection *>(thiscol)){
-		      for( unsigned int hidx = 0; hidx < thiscast->GetSize(); hidx++ ){
-			  fIO->AddScintDetectorHit(
-				  (g4rcScintDetectorHit *) thiscast->GetHit(hidx) );
-		      }
-		  }
 	      }
 	  }
 	}

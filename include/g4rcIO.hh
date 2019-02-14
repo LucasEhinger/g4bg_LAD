@@ -14,7 +14,6 @@ class TFile;
 class TTree;
 
 class g4rcDetectorHit;
-class g4rcScintDetectorHit;
 class g4rcUniformScattering;
 class g4rcCrossSection;
 
@@ -66,11 +65,7 @@ class g4rcIO {
     private:
 	Double_t fEvPart_X;
 	Double_t fEvPart_Y;
-	Double_t fEvPart_Z;
 	Double_t fEvPart_P;
-	Double_t fEvPart_Px;
-	Double_t fEvPart_Py;
-	Double_t fEvPart_Pz;
 	Int_t fEvPart_PID;
 
 	Double_t fEbeam;
@@ -108,11 +103,9 @@ class g4rcIO {
     private:
 	Int_t fNDetHit;
 	Int_t fDetHit_det[__IO_MAXHIT];
-	Int_t fDetHit_id[__IO_MAXHIT];
 
 	Int_t fDetHit_trid[__IO_MAXHIT];
 	Int_t fDetHit_pid[__IO_MAXHIT];
-	Int_t fDetHit_gen[__IO_MAXHIT];
 	Int_t fDetHit_mtrid[__IO_MAXHIT];
 
 	Double_t fDetHit_X[__IO_MAXHIT];
@@ -126,22 +119,6 @@ class g4rcIO {
 	Double_t fDetHit_E[__IO_MAXHIT];
 	Double_t fDetHit_M[__IO_MAXHIT];
 
-	Double_t fDetHit_Vx[__IO_MAXHIT];
-	Double_t fDetHit_Vy[__IO_MAXHIT];
-	Double_t fDetHit_Vz[__IO_MAXHIT];
-	Double_t fDetHit_Vdx[__IO_MAXHIT];
-	Double_t fDetHit_Vdy[__IO_MAXHIT];
-	Double_t fDetHit_Vdz[__IO_MAXHIT];
-
-	//  ScintDetectorHit
-    public:
-	void AddScintDetectorHit(g4rcScintDetectorHit *);
-    private:
-	Int_t fNScintDetHit;
-	Int_t fScintDetHit_det[__IO_MAXHIT];
-	Int_t fScintDetHit_id[__IO_MAXHIT];
-
-	Double_t fScintDetHit_edep[__IO_MAXHIT];
 
 };
 
