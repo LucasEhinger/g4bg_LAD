@@ -17,7 +17,6 @@ class g4rcEventAction;
 class g4rcPrimaryGeneratorAction;
 class g4rcSteppingAction;
 class g4rcUniformScatteringConstructor;
-class g4rcCrossSection;
 
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
@@ -36,7 +35,6 @@ class g4rcMessenger : public G4UImessenger {
 	void SetDetCon( g4rcDetectorConstruction *dc ){ fdetcon= dc; }
 	void SetEvAct( g4rcEventAction *ev ){ fevact = ev; }
 	void SetStepAct( g4rcSteppingAction *st ){ fStepAct = st; }
-	void SetCrossSection( g4rcCrossSection* xs ){ fXS = xs; }
 
 	void SetNewValue(G4UIcommand* cmd, G4String newValue);
 
@@ -46,7 +44,6 @@ class g4rcMessenger : public G4UImessenger {
 	g4rcEventAction *fevact;
 	g4rcPrimaryGeneratorAction *fprigen;
 	g4rcSteppingAction *fStepAct;
-	g4rcCrossSection *fXS;
 
 	G4UIdirectory *fRemollDir;
 	

@@ -10,7 +10,6 @@
 #include "g4rcSteppingAction.hh"
 #include "g4rcDetectorConstruction.hh"
 #include "g4rcUniformScatteringConstructor.hh"
-#include "g4rcCrossSection.hh"
 
 #include "g4rcIO.hh"
 #include "g4rcMessenger.hh"
@@ -54,8 +53,19 @@ int main(int argc, char** argv){
 
     // Initialize the CLHEP random engine used by
     // "shoot" type functions
+    unsigned int seed = time(0) + (int) getpid();
 
-    unsigned int seed = time(0);
+    unsigned int devrandseed = 0;
+    //  /dev/urandom doens't block
+    FILE *fdrand = fopen("/dev/urandom", "r");
+    if( fdrand ){
+	fread(&devrandseed, sizeof(int), 1, fdrand);
+	seed += devrandseed;
+	fclose(fdrand);
+    }
+
+
+	std::cout << "\n THE SEED FOR THIS RUN IS " << seed << std::endl;
 
     CLHEP::HepRandom::createInstance();
     CLHEP::HepRandom::setTheSeed(seed);
@@ -85,10 +95,6 @@ int main(int argc, char** argv){
    
      g4rcUniformScatteringConstructor* usc = new g4rcUniformScatteringConstructor();
      physlist->RegisterPhysics(usc);
-
-	g4rcCrossSection* xs = new g4rcCrossSection();
-	rmmess->SetCrossSection(xs);
-	io->SetCrossSection(xs);
 
     //-------------------------------
     // UserAction classes

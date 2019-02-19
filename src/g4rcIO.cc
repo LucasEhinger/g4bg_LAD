@@ -12,7 +12,6 @@
 #include "g4rcDetectorHit.hh"
 #include "g4rcEvent.hh"
 #include "g4rcUniformScattering.hh"
-#include "g4rcCrossSection.hh"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -29,7 +28,6 @@ g4rcIO::g4rcIO(){
 	fHRSangle = 17.5*deg;
 	fFile = NULL;
 	fUS = NULL;
-	fXS = NULL;
 }
 
 g4rcIO::~g4rcIO(){
@@ -83,11 +81,6 @@ void g4rcIO::InitializeTree(){
 	fTree->Branch("xBj.obs",	&fxBobs,	"xBj.obs/D");
 	fTree->Branch("Q2.born",	&fQ2born,	"Q2.born/D");
 	fTree->Branch("xBj.born",	&fxBborn,	"xBj.born/D");
-
-	fTree->Branch("xs.born.ineft",		&fXSBornIneft,		"xs.born.ineft/D");
-	fTree->Branch("xs.obs.ineft",		&fXSObsIneft,		"xs.obs.ineft/D");
-//	fTree->Branch("xs.born.gsmear",		&fXSBornGsmear,		"xs.born.gsmear/D");
-//	fTree->Branch("xs.obs.gsmear",		&fXSObsGsmear,		"xs.obs.gsmear/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -204,10 +197,6 @@ void g4rcIO::SetScatteringData() {
 	fQ2born = fUS->fQ2born/(GeV*GeV);
 	fxBborn = fQ2born/(2.*Mp*nuBorn);
 
-	// Calculate born event cross sections
-	fXSBornIneft = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "ineft");
-//	fXSBornGsmear = fXS->CalculateCrossSection(fE0, fEp, fTh0_HCS, "gsmear");
-
 	// Calculate born event angles in TRANSPORT coordinates
 	G4ThreeVector p0_HCS = G4ThreeVector(sin(fTh0_HCS)*cos(fPh0_HCS), sin(fTh0_HCS)*sin(fPh0_HCS), cos(fPh0_HCS));
 
@@ -228,15 +217,13 @@ void g4rcIO::SetScatteringData() {
 		G4double nuObs = fEbeam - fEobs;
 		fQ2obs = 2.*fEbeam*fEobs*(1. - cos(fThObs_HCS));
 		fxBobs = fQ2obs/(2.*Mp*nuObs);
-		fXSObsIneft = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "ineft");
-//		fXSObsGsmear = fXS->CalculateCrossSection(fEbeam, fEobs, fThObs_HCS, "gsmear");
 		G4ThreeVector pObs_HCS = G4ThreeVector(sin(fThObs_HCS)*cos(fPhObs_HCS), sin(fThObs_HCS)*sin(fPhObs_HCS), cos(fPhObs_HCS));
 		G4ThreeVector pObs_TCS = target_transform.TransformPoint(pObs_HCS);
 		fThObs_TCS = pObs_TCS.x()/pObs_TCS.z();
 		fPhObs_TCS = pObs_TCS.y()/pObs_TCS.z();	
 	} else {
 
-		fQ2obs = fxBobs = fXSObsIneft = fXSObsGsmear = fThObs_TCS = fPhObs_TCS = fThObs_HCS = fPhObs_HCS = fEobs = -333.;
+		fQ2obs = fxBobs = fThObs_TCS = fPhObs_TCS = fThObs_HCS = fPhObs_HCS = fEobs = -333.;
 
 	}
 

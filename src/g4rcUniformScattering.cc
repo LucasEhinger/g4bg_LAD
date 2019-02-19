@@ -75,7 +75,7 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
 
 		G4double internal_loss1;
-		G4double E0, Ef, nu_true, x_born;
+		G4double E0, Ef, nu_true;
 
 		nu_true = -1.;
 

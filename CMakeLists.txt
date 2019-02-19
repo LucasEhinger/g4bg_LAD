@@ -5,8 +5,6 @@
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(G4RC)
 
-enable_language (Fortran)
-
 #ROOT path
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(ROOT REQUIRED)
@@ -35,7 +33,6 @@ include(${Geant4_USE_FILE})
 
 #debugging symbols, complains
 set(CMAKE_CXX_FLAGS "-ggdb -Wall -O0")
-set(CMAKE_Fortran_FLAGS "-C -g -w -fno-automatic -fbounds-check -ffixed-line-length-132")
 
 #----------------------------------------------------------------------------
 # Generate dictionaries as well (so we can write objects to ROOT files
@@ -47,12 +44,10 @@ include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIR} ${CMAKE_CU
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/g4rc*.cc ${PROJECT_SOURCE_DIR}/src/model/*.f)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/g4rc*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
-# Set CERN libraries
-set(cernlibs -L/share/apps/cernlib/x86_64-slc5/2006b/lib -lmathlib -lpacklib -lc -lm)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
@@ -60,7 +55,7 @@ set(cernlibs -L/share/apps/cernlib/x86_64-slc5/2006b/lib -lmathlib -lpacklib -lc
 #add_executable(g4rc g4rc.cc ${sources} ${headers} g4rcDict.cxx)
 add_executable(g4rc g4rc.cc ${sources} ${headers})
 #add_library(g4rcroot SHARED ${libsources} ${libheaders} g4rcDict.cxx)
-target_link_libraries(g4rc ${Geant4_LIBRARIES} ${ROOT_LIBRARIES} ${cernlibs})
+target_link_libraries(g4rc ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #target_link_libraries(g4rcroot ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
@@ -84,7 +79,6 @@ set(G4RC_SCRIPTS
     macros/runscript.sh
     macros/handler.sh
 	macros/merger.sh
-	cdbn.qwave
 )
 
 foreach(_script ${G4RC_SCRIPTS})
