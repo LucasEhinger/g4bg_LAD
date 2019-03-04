@@ -58,10 +58,19 @@ void g4rcMaterial::ConstructMaterials() {
 	// Target gases
 	double R = 8.314;
 
+ 	// standard target density
 	double rho_H2 = 2.832*mg/cm3;
 	double rho_D2 = 5.686*mg/cm3;
 	double rho_T2 = 3.404*mg/cm3; 
 	double rho_He = 2.135*mg/cm3;
+
+/*
+	// thick target density
+	double rho_H2 = 2.832*g/cm3;
+	double rho_D2 = 5.686*g/cm3;
+	double rho_T2 = 3.404*g/cm3; 
+	double rho_He = 2.135*g/cm3;
+*/
 
 	double temp = 45.0*kelvin;
 

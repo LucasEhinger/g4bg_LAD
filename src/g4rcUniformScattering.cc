@@ -54,6 +54,8 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 
 	if(!fHasScattered) {
 
+		G4double Mp = 0.938272*GeV;
+
 		G4double Epre = aTrack.GetTotalEnergy();
 		G4double Ekin = aTrack.GetKineticEnergy();
 
@@ -64,9 +66,9 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double fCosThMax = cos(fThetaMin);
 		G4double theta = acos(CLHEP::RandFlat::shoot(fCosThMin, fCosThMax));
 
-		// Set upper Q2 limit based on angle, and choose Q2
+		// Set upper Q2 limit and sample
 		G4double fQ2Min = 0.;
-		G4double fQ2Max = 2.*Epre*Epre*(1. - cos(theta));
+		G4double fQ2Max = (2.*Mp*Epre)/(1.+(Mp/(Epre*(1.-cos(theta)))));
 		G4double Q2_born = CLHEP::RandFlat::shoot(fQ2Min, fQ2Max);
 
 		// Choose phi;
@@ -75,18 +77,26 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		G4double phi = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
 
 		G4double internal_loss1;
-		G4double E0, Ef, nu_true;
+		G4double E0, Ef, nu_born;
 
-		nu_true = -1.;
+		nu_born = -1.;
 
-		while(nu_true < 0.) {
+		int n_tries = 0;
+		bool good_kin = true;
+
+		while((nu_born < 0.) || (nu_born < (Q2_born/(2.*Mp)))) {
+			if(n_tries >= 10) {
+				good_kin = false;
+				break;
+			}
 			internal_loss1 = RadiateInternal(Q2_born, Ekin);
 			E0 = Epre - internal_loss1;
 			Ef = Q2_born/(2.*E0*(1. - cos(theta)));
-			nu_true = E0 - Ef;
+			nu_born = E0 - Ef;
+			n_tries++;
 		}
 
-		Ekin = Ekin - internal_loss1 - nu_true;
+		Ekin = Ekin - internal_loss1 - nu_born;
 		G4double internal_loss2 = RadiateInternal(Q2_born, Ekin);
 
 		G4double Epost = Ef - internal_loss2;
@@ -101,8 +111,12 @@ G4VParticleChange* g4rcUniformScattering::PostStepDoIt(const G4Track& aTrack, co
 		fPhi = phi;
 		fQ2born = Q2_born;
 		
-		aParticleChange.ProposeEnergy(Epost);
-		aParticleChange.ProposeMomentumDirection(p);
+		if(good_kin) {
+			aParticleChange.ProposeEnergy(Epost);
+			aParticleChange.ProposeMomentumDirection(p);
+		} else {
+			aParticleChange.ProposeTrackStatus(fStopAndKill);
+		}
 
 		fHasScattered = true;
 	}
