@@ -120,7 +120,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	double z_gem2 = r_gem2*cos(gem_angle);
 
 	G4RotationMatrix* rot_gem = new G4RotationMatrix();
-	rot_gem->rotateY(gem_angle);
+	rot_gem->rotateY(180.*deg - gem_angle);
 
 	G4Box* gem1_box = new G4Box("gem1_box", w_gem1/2., h_gem1/2., t_gem/2.);  
 	G4LogicalVolume* gem1_log = new G4LogicalVolume(gem1_box, fMaterial->vacuum, "gem1_log", 0, 0, 0);
