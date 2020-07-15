@@ -9,7 +9,6 @@
 #include "g4rcEventAction.hh"
 #include "g4rcSteppingAction.hh"
 #include "g4rcDetectorConstruction.hh"
-#include "g4rcUniformScatteringConstructor.hh"
 
 #include "g4rcIO.hh"
 #include "g4rcMessenger.hh"
@@ -93,8 +92,6 @@ int main(int argc, char** argv){
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
    
-     g4rcUniformScatteringConstructor* usc = new g4rcUniformScatteringConstructor();
-     physlist->RegisterPhysics(usc);
 
     //-------------------------------
     // UserAction classes
@@ -111,7 +108,6 @@ int main(int argc, char** argv){
     G4UserEventAction* event_action = new g4rcEventAction;
     rmmess->SetEvAct((g4rcEventAction* ) event_action);
     ((g4rcEventAction *) event_action)->SetIO(io);
-    ((g4rcEventAction *) event_action)->SetUSConstructor(usc);
 
     runManager->SetUserAction(event_action);
     G4UserSteppingAction* stepping_action = new g4rcSteppingAction;

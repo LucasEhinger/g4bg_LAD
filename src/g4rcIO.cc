@@ -11,7 +11,6 @@
 
 #include "g4rcDetectorHit.hh"
 #include "g4rcEvent.hh"
-#include "g4rcUniformScattering.hh"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -24,10 +23,8 @@ g4rcIO::g4rcIO(){
     InitializeTree();
     // Default filename
      	strcpy(fFilename, "g4rcout.root");
-	fDetectedElectron = false;
 	fHRSangle = 17.5*deg;
 	fFile = NULL;
-	fUS = NULL;
 }
 
 g4rcIO::~g4rcIO(){
@@ -59,28 +56,6 @@ void g4rcIO::InitializeTree(){
     fTree->Branch("ev.vx",    &fEvPart_X,   "ev.vx/D");
     fTree->Branch("ev.vy",    &fEvPart_Y,   "ev.vy/D");
     fTree->Branch("ev.p",     &fEvPart_P,   "ev.p/D");
-
-	fTree->Branch("Ebeam",	&fEbeam,	"Ebeam/D");
-	fTree->Branch("Epre",	&fEpre,		"Epre/D");
-	fTree->Branch("E0",	&fE0,		"E0/D");
-	fTree->Branch("Ep",	&fEp,		"Ep/D");
-	fTree->Branch("Epost",	&fEpost,	"Epost/D");
-	fTree->Branch("Edet",	&fEobs,		"Eded/D");		
-
-	fTree->Branch("thHall.born",	&fTh0_HCS,	"thHall.born/D");	
-	fTree->Branch("phHall.born",	&fPh0_HCS,	"phHall.born/D");	
-	fTree->Branch("thTarg.born",	&fTh0_TCS,	"thHall.born/D");	
-	fTree->Branch("phTarg.born",	&fPh0_TCS,	"phHall.born/D");	
-	
-	fTree->Branch("thHall.obs",	&fThObs_HCS,	"thHall.obs/D");	
-	fTree->Branch("phHall.obs",	&fPhObs_HCS,	"phHall.obs/D");	
-	fTree->Branch("thTarg.obs",	&fThObs_TCS,	"thHall.obs/D");	
-	fTree->Branch("phTarg.obs",	&fPhObs_TCS,	"phHall.obs/D");	
-
-	fTree->Branch("Q2.obs",		&fQ2obs,	"Q2.obs/D");
-	fTree->Branch("xBj.obs",	&fxBobs,	"xBj.obs/D");
-	fTree->Branch("Q2.born",	&fQ2born,	"Q2.born/D");
-	fTree->Branch("xBj.born",	&fxBborn,	"xBj.born/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -117,7 +92,6 @@ void g4rcIO::FillTree(){
 void g4rcIO::Flush(){
     	//  Set arrays to 0
     	fNDetHit = 0;
-	fDetectedElectron = false;
 }
 
 void g4rcIO::WriteTree(){
@@ -166,71 +140,6 @@ void g4rcIO::SetEventData(g4rcEvent *ev){
 }
 
 
-void g4rcIO::SetScatteringData() {
-
-
-	G4double Mp = 0.938272;
-	
-	fEbeam = 10.589;
-
-/*
- * The following variables (if they exist) are filled by AddDetectorHit:
- * 
- * 	fEobs
- * 	fThObs_HCS
- * 	fPhObs_TCS	
-*/
-
-	// Get energies (convert to GeV)
-	fEpre = fUS->fEpre/GeV;
-	fE0 = fUS->fE0/GeV;	
-	fEp = fUS->fEp/GeV;
-	fEpost = fUS->fEpost/GeV;
-
-	G4double nuBorn = fE0 - fEp;
-
-	// Get born event angles (hall coordinates)
-	fTh0_HCS = fUS->fTheta;
-	fPh0_HCS = fUS->fPhi;	
-
-	// Get or calculate born event x and Q2
-	fQ2born = fUS->fQ2born/(GeV*GeV);
-	fxBborn = fQ2born/(2.*Mp*nuBorn);
-
-	// Calculate born event angles in TRANSPORT coordinates
-	G4ThreeVector p0_HCS = G4ThreeVector(sin(fTh0_HCS)*cos(fPh0_HCS), sin(fTh0_HCS)*sin(fPh0_HCS), cos(fPh0_HCS));
-
-	G4RotationMatrix rotateTarg;
-	rotateTarg.rotateY(-fHRSangle);
-	rotateTarg.rotateZ(90.*deg);		
-	G4AffineTransform target_transform;
-	target_transform.SetNetRotation(rotateTarg);
-	target_transform.Invert();
-
-	G4ThreeVector p0_TCS = target_transform.TransformPoint(p0_HCS);
-
-	fTh0_TCS = p0_TCS.x()/p0_TCS.z();
-	fPh0_TCS = p0_TCS.y()/p0_TCS.z();
-
-	// If the electron entered the spectrometer, calculate the observed quantities
-	if(fDetectedElectron) {
-		G4double nuObs = fEbeam - fEobs;
-		fQ2obs = 2.*fEbeam*fEobs*(1. - cos(fThObs_HCS));
-		fxBobs = fQ2obs/(2.*Mp*nuObs);
-		G4ThreeVector pObs_HCS = G4ThreeVector(sin(fThObs_HCS)*cos(fPhObs_HCS), sin(fThObs_HCS)*sin(fPhObs_HCS), cos(fPhObs_HCS));
-		G4ThreeVector pObs_TCS = target_transform.TransformPoint(pObs_HCS);
-		fThObs_TCS = pObs_TCS.x()/pObs_TCS.z();
-		fPhObs_TCS = pObs_TCS.y()/pObs_TCS.z();	
-	} else {
-
-		fQ2obs = fxBobs = fThObs_TCS = fPhObs_TCS = fThObs_HCS = fPhObs_HCS = fEobs = -333.;
-
-	}
-
-	
-	
-}
-
 // DetectorHit
 
 void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
@@ -259,13 +168,6 @@ void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
     fDetHit_P[n]  = hit->fP/__E_UNIT;
     fDetHit_E[n]  = hit->fE/__E_UNIT;
     fDetHit_M[n]  = hit->fM/__E_UNIT;
-
-	if(hit->fTrID == 1) {
-		fEobs = hit->fE/GeV;
-		fThObs_HCS = hit->f3P.theta();
-		fPhObs_HCS = hit->f3P.phi();
-		fDetectedElectron = true;
-	}
 
     fNDetHit++;
 

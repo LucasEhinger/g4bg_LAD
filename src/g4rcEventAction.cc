@@ -1,7 +1,6 @@
 #include "g4rcEventAction.hh"
 #include "g4rcDetectorHit.hh"
 #include "g4rcSteppingAction.hh"
-#include "g4rcUniformScatteringConstructor.hh"
 
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -23,7 +22,6 @@
 
 
 g4rcEventAction::g4rcEventAction() {
-	fUS = NULL;
 }
 
 g4rcEventAction::~g4rcEventAction(){
@@ -31,23 +29,15 @@ g4rcEventAction::~g4rcEventAction(){
 
 
 void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
+
     // Pretty ongoing status with flush
     if( (ev->GetEventID() % 1000) == 0 ){
 	printf("Event %8d\r", ev->GetEventID() );
 	fflush(stdout);
     }
 
-	if(!fUS) {	
-		fUS = fUSC->GetUniformScatteringProcess();
-		fIO->SetUniformScatteringProcess(fUS);
-		fUS->SetCentralScatteringAngle(fHRSAngle);
-	}
-
-	G4double vz = CLHEP::RandFlat::shoot(-10.*cm, 10.*cm);
-	fUS->SetVertexZ(vz);
-	fUS->fHasScattered = false;
-
     return;
+
 }
 
 void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
@@ -76,8 +66,6 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
 	      }
 	  }
 	}
-
-	fIO->SetScatteringData();
 
 	// Fill tree and reset buffers
 	fIO->FillTree();

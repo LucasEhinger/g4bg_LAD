@@ -14,7 +14,6 @@ class TFile;
 class TTree;
 
 class g4rcDetectorHit;
-class g4rcUniformScattering;
 
 #define __IO_MAXHIT 10000
 #define __FILENAMELEN 255
@@ -49,45 +48,17 @@ class g4rcIO {
 
 	char fFilename[__FILENAMELEN];
 
-	g4rcUniformScattering* fUS;
-
 	//  Interfaces and buffers to the tree
 	//  This is potentially going to get very long...
 
 	// Event data
     public:
 	void SetEventData(g4rcEvent *);
-	void SetScatteringData();
-	void SetUniformScatteringProcess(g4rcUniformScattering* us) { fUS = us; }
     private:
 	Double_t fEvPart_X;
 	Double_t fEvPart_Y;
 	Double_t fEvPart_P;
 	Int_t fEvPart_PID;
-
-	Double_t fEbeam;
-	Double_t fE0;
-	Double_t fEp;
-	Double_t fEpre;
-	Double_t fEpost;
-	Double_t fEobs;
-
-	Double_t fTh0_HCS;
-	Double_t fPh0_HCS;
-	Double_t fTh0_TCS;
-	Double_t fPh0_TCS;
-	
-	Double_t fThObs_HCS;
-	Double_t fPhObs_HCS;
-	Double_t fThObs_TCS;
-	Double_t fPhObs_TCS;
-	
-	Double_t fQ2obs;
-	Double_t fxBobs;
-	Double_t fQ2born;
-	Double_t fxBborn;
-
-	bool fDetectedElectron;
 
 	//  DetectorHit
     public:

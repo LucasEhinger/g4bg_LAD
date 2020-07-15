@@ -16,7 +16,6 @@ class g4rcDetectorConstruction;
 class g4rcEventAction;
 class g4rcPrimaryGeneratorAction;
 class g4rcSteppingAction;
-class g4rcUniformScatteringConstructor;
 
 class G4UIcmdWithAnInteger;
 class G4UIcmdWithADoubleAndUnit;
