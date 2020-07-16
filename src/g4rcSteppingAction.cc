@@ -14,12 +14,15 @@ g4rcSteppingAction::g4rcSteppingAction()
 
 void g4rcSteppingAction::UserSteppingAction(const G4Step *aStep) {
 
+	// Do nothing
+
+/*
 	G4Track* aTrack = aStep->GetTrack();
 
 	if(aTrack->GetTrackID() != 1 || aTrack->GetTotalEnergy() < 0.1*GeV) {
 		aTrack->SetTrackStatus(fStopAndKill);
 	}
-
+*/
 }
 
 
