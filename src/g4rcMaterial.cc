@@ -21,6 +21,7 @@ g4rcMaterial* g4rcMaterial::GetMaterialManager() {
 
 g4rcMaterial::g4rcMaterial() {
 
+	fNistMan = G4NistManager::Instance();
 	ConstructMaterials();
 	fMaterialManager=this;
 
@@ -91,6 +92,8 @@ void g4rcMaterial::ConstructMaterials() {
 
 	He_gas = new G4Material("He_gas", density = rho_He, nComp = 1, kStateGas, temp, pressure = P_He);
 	He_gas->AddElement(He,1);
+
+	H2_liquid = fNistMan->FindOrBuildMaterial("G4_lH2");
 
 
 	//A pressure that causes the Hg column to rise 1 millimeter is called ONE torr (1mm Hg)

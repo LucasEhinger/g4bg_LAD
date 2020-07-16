@@ -21,6 +21,7 @@ public:
 private:
 	static g4rcMaterial* fMaterialManager;
 
+	G4NistManager* fNistMan;
 
 private:
 	void ConstructMaterials();
@@ -36,6 +37,7 @@ public:
 	G4Material* aluminum;
 	G4Material* beryllium;
 	G4Material* kapton;
+	G4Material* H2_liquid;
 
 };
 typedef g4rcMaterial g4rcMaterialManager;

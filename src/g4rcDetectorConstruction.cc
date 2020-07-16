@@ -79,7 +79,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	// Target gas volume
 	
 	G4Tubs* gas_tubs = new G4Tubs("gas_tubs", 0., radius, length/2., 0.*deg, 360.*deg);
-	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas[fTargIndex], "gas_logical", 0,0,0);
+//	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas[fTargIndex], "gas_logical", 0,0,0);
+	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, fMaterial->H2_liquid, "gas_logical", 0,0,0);
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
 	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
