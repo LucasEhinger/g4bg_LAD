@@ -17,7 +17,12 @@
 #include "G4PhysListFactory.hh"
 #include "G4RunManager.hh"
 
+#include "PhysListPureEm.hh"
+#include "PhysListEmModified.hh"
+
 #include "G4UnitsTable.hh"
+
+#include "G4StepLimiterPhysics.hh"
 
 #include "G4RunManagerKernel.hh"
 
@@ -85,13 +90,25 @@ int main(int argc, char** argv){
     runManager->SetUserInitialization(detector);
     rmmess->SetDetCon( ((g4rcDetectorConstruction *) detector) );
 
+/*
     // Physics we want to use
     G4int verbose = 0;
     G4PhysListFactory factory;
     G4VModularPhysicsList* physlist = factory.GetReferencePhysList("FTFP_BERT");
     physlist->SetVerboseLevel(verbose);
     runManager->SetUserInitialization(physlist);
+  */
+
+	G4VModularPhysicsList *physicsList = NULL;
+
+        physicsList = new PhysListPureEm("EM", true, 1);
    
+	physicsList->RegisterPhysics(new G4StepLimiterPhysics());
+
+//        physicsList->RemovePhysics(bElectromagnetic);
+        physicsList->RegisterPhysics(new PhysListEmModified());
+
+	runManager->SetUserInitialization(physicsList);
 
     //-------------------------------
     // UserAction classes
