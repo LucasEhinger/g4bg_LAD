@@ -18,10 +18,6 @@
 
 g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
-	fTarg = "H3";
-	GetTargetIndex(fTarg);
-	fHRS = "L";
-	fHRSAngle = 17.5*deg;    
 
 }
 
@@ -34,11 +30,10 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	fMaterial = g4rcMaterial::GetMaterialManager();
 
-	G4double length = 25.0*cm;
-	G4double radius = 0.65*cm;
-	G4double thickness = 0.5*mm;
-
-	G4Material* target_gas[4] = {fMaterial->H2_gas, fMaterial->D2_gas, fMaterial->T2_gas, fMaterial->He_gas};
+	G4double length = 20.0*cm;
+	G4double radius = 0.5*cm;
+	G4double window = 0.125*mm;
+	G4double wall = 0.2*mm;
 
 	// WORLD LOGICAL
 	
@@ -69,7 +64,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// Target cell
 
-	G4Tubs* cell_tubs = new G4Tubs("cell_tubs", 0., radius + thickness, length/2. + thickness, 0.*deg, 360.*deg);
+	G4Tubs* cell_tubs = new G4Tubs("cell_tubs", 0., radius + wall, length/2. + window, 0.*deg, 360.*deg);
 	G4Tubs* cell_empt = new G4Tubs("cell_empt", 0., radius, length/2., 0.*deg, 360.*deg);
 
 	G4SubtractionSolid* cell_sub = new G4SubtractionSolid("cell_sub", cell_tubs, cell_empt);

@@ -31,7 +31,7 @@ g4rcPrimaryGeneratorAction::g4rcPrimaryGeneratorAction() {
 	
 	fZ = -35.*cm;
 
-	fEbeam = 10.6*GeV;
+	fEbeam = 10.9*GeV;
 
   	fParticleGun = new G4ParticleGun(n_particle);
   	fDefaultEvent = new g4rcEvent();
