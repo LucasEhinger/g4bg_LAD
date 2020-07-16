@@ -96,8 +96,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
 
 
-	// Define the GEMs
-
+	// Define the LAD GEMs
 	double w_gem1 = 10.*cm;
 	double h_gem1 = 45.*cm;
 	double w_gem2 = 13.*cm;
@@ -124,6 +123,26 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4Box* gem2_box = new G4Box("gem2_box", w_gem2/2., h_gem2/2., t_gem/2.);  
 	G4LogicalVolume* gem2_log = new G4LogicalVolume(gem2_box, fMaterial->vacuum, "gem2_log", 0, 0, 0);
 
+	// Define the GMn GEMs
+	
+	double w_gmn = 50.*cm;
+	double h_gmn = 50.*cm;
+
+	double t_gmn = 0.5*cm;
+
+	double r_gmn = 1.5*m;
+	
+	double gmn_angle = 40.*deg;
+
+	double x_gmn = r_gmn*sin(gmn_angle);
+        double z_gmn = r_gmn*cos(gmn_angle);
+	
+	G4RotationMatrix* rot_gmn = new G4RotationMatrix();
+        rot_gem->rotateY(180.*deg - gmn_angle);
+
+	G4Box* gmn_box = new G4Box("gmn_box", w_gmn/2., h_gmn/2., t_gmn/2.);
+	G4LogicalVolume* gmn_log = new G4LogicalVolume(gmn_box, fMaterial->vacuum, "gmn_log", 0, 0, 0);
+	
 	// Make the GEMs sensitive detectors
 
 	G4SDManager* SDman = G4SDManager::GetSDMpointer();
@@ -136,8 +155,13 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	SDman->AddNewDetector(gem2_SD);
 	gem2_log->SetSensitiveDetector(gem2_SD);
 
+	g4rcDetector* gmn_SD = new g4rcDetector("gmn_SD",201);
+	SDman->AddNewDetector(gmn_SD);
+	gmn_log->SetSensitiveDetector(gmn_SD);
+
 	G4VPhysicalVolume* gem1_phys = new G4PVPlacement(rot_gem, G4ThreeVector(x_gem1, 0., z_gem1), gem1_log, "gem1_physical", world_log, false, 0); 
 	G4VPhysicalVolume* gem2_phys = new G4PVPlacement(rot_gem, G4ThreeVector(x_gem2, 0., z_gem2), gem2_log, "gem2_physical", world_log, false, 0); 
+	G4VPhysicalVolume* gmn_phys  = new G4PVPlacement(rot_gmn, G4ThreeVector(x_gmn, 0., z_gmn), gmn_log, "gmn_physical", world_log, false, 0); 
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
