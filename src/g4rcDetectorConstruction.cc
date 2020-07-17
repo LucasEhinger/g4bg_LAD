@@ -97,10 +97,10 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 
 	// Define the LAD GEMs
-	double w_gem1 = 0.96*m;
-	double h_gem1 = 0.44*m;
-	double w_gem2 = 1.2*m;
-	double h_gem2 = 0.55*m;
+	double h_gem1 = 0.96*m;
+	double w_gem1 = 0.44*m;
+	double h_gem2 = 1.2*m;
+	double w_gem2 = 0.55*m;
 	
 	double t_gem = 0.5*cm;
 
