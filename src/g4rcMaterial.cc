@@ -106,7 +106,7 @@ void g4rcMaterial::ConstructMaterials() {
 	deuterium->AddIsotope(deuteron, 1);
 	
 	// Liquid Deuterium
-	D2_liquid = new G4Material("LD2", 0.169*g/cm3, 1, kStateLiquid, 22.0*kelvin);
+	D2_liquid = new G4Material("LD2", 0.174*g/cm3, 1, kStateLiquid, 19.0*kelvin);
 	D2_liquid->AddElement(deuterium, 2);
 
 
