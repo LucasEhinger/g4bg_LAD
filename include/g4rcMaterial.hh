@@ -5,6 +5,7 @@
 #include <G4PhysicalConstants.hh>
 
 #include "G4NistManager.hh"
+#include "G4Isotope.hh"
 #include "G4Material.hh"
 #include "G4Element.hh"
 #include "G4MaterialTable.hh"
@@ -38,6 +39,7 @@ public:
 	G4Material* beryllium;
 	G4Material* kapton;
 	G4Material* H2_liquid;
+	G4Material* D2_liquid;
 
 };
 typedef g4rcMaterial g4rcMaterialManager;

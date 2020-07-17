@@ -95,6 +95,20 @@ void g4rcMaterial::ConstructMaterials() {
 
 	H2_liquid = fNistMan->FindOrBuildMaterial("G4_lH2");
 
+	
+	// ----  gas and liquid deuterium
+
+	// Deuteron isotope
+	G4Isotope* deuteron  = new G4Isotope("deuteron", 1, 2, 2.0141018*g/mole);
+	
+	// Deuterium element
+	G4Element* deuterium = new G4Element("deuterium", "deuterium", 1);
+	deuterium->AddIsotope(deuteron, 1);
+	
+	// Liquid Deuterium
+	D2_liquid = new G4Material("LD2", 0.169*g/cm3, 1, kStateLiquid, 22.0*kelvin);
+	D2_liquid->AddElement(deuterium, 2);
+
 
 	//A pressure that causes the Hg column to rise 1 millimeter is called ONE torr (1mm Hg)
 	// Vacuum of 1.e-6 torr at room temperature,  1 atmosphere = 101325*pascal = 760 *torr
