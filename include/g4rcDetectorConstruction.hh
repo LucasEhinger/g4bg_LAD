@@ -26,6 +26,10 @@ private:
 
 	g4rcMaterial* fMaterial;
 
+	void AddGEM(G4LogicalVolume*, int, bool);
+	G4double fGEMCenter[1];
+
+
 	void GetTargetIndex(G4String);
 
 };
