@@ -41,6 +41,21 @@ public:
 	G4Material* H2_liquid;
 	G4Material* D2_liquid;
 
+
+	G4Material* Galaxy;
+	G4Material* NemaG10;
+	G4Material* CO2;
+	G4Material* ArCO2;
+	G4Material* Kapton;
+	G4Material* Kapton0d2;
+	G4Material* Kapton0d8;
+	G4Material* Copper;
+	G4Material* Copper0d2;
+	G4Material* Copper0d75;
+	G4Material* Copper0d8;
+
+
+
 };
 typedef g4rcMaterial g4rcMaterialManager;
 
