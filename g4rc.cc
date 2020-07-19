@@ -105,7 +105,7 @@ int main(int argc, char** argv){
    
 	physicsList->RegisterPhysics(new G4StepLimiterPhysics());
 
-//        physicsList->RemovePhysics(bElectromagnetic);
+        physicsList->RemovePhysics("G4EmStandard");
         physicsList->RegisterPhysics(new PhysListEmModified());
 
 	runManager->SetUserInitialization(physicsList);
