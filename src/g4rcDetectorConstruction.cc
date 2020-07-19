@@ -167,7 +167,11 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VPhysicalVolume* gem2_phys = new G4PVPlacement(rot_gem, G4ThreeVector(x_gem2, 0., z_gem2), gem2_log, "gem2_physical", world_log, false, 0); 
 	G4VPhysicalVolume* gmn_phys  = new G4PVPlacement(rot_gmn, G4ThreeVector(x_gmn, 0., z_gmn), gmn_log, "gmn_physical", world_log, false, 0); 
 
-	AddGEM(world_log, 0, false);
+
+	G4RotationMatrix* norot = new G4RotationMatrix();
+	G4ThreeVector pos = G4ThreeVector(0., 0., fGEMCenter[0]);
+
+	AddGEM(world_log, 0, false, 55.04*cm, 122.88*cm, norot, pos);
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
@@ -177,7 +181,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 }
 
 
-void g4rcDetectorConstruction::AddGEM(G4LogicalVolume *mother, int layerid, bool culess) {
+void g4rcDetectorConstruction::AddGEM(G4LogicalVolume *mother, int layerid, bool culess, double GEMx, double GEMy, G4RotationMatrix* GEMRot, G4ThreeVector GEMPos) {
 
     G4Material *DefaultM = G4Material::GetMaterial("Galaxy");
     G4Material *GEMFrameM = G4Material::GetMaterial("NemaG10");
@@ -192,10 +196,10 @@ void g4rcDetectorConstruction::AddGEM(G4LogicalVolume *mother, int layerid, bool
     G4Material *GEMGlueM = G4Material::GetMaterial("Kapton"); // TODO: Add actual Glue material
 
     // GEM
-    G4double GEMCenter = fGEMCenter[layerid];
+//    G4double GEMCenter = fGEMCenter[layerid];
     G4double GEMGap = 3.971 * cm; // Gap between two GEM // 3.971 from Weizhi
-    G4double GEMHalfX = 55.04 * cm / 2.0;
-    G4double GEMHalfY = 122.88 * cm / 2.0;
+    G4double GEMHalfX = GEMx / 2.0;
+    G4double GEMHalfY = GEMy / 2.0;
     G4double GEMHalfT = (15.0 * mm + 455.0 * um) / 2.0; // 2 * 25 + 5 + 50 (win) + 6 * 5 + 3 * 50 (foil) + 5 + 5 + 50 + 50 + 60 (readout)
 
     if (culess) GEMHalfT = (15.0 * mm + 410.0 * um) / 2.0; // 2 * 25 + 50 (win) + 3 * 50 (foil) + 50 + 50 + 60 (readout)
@@ -215,7 +219,7 @@ void g4rcDetectorConstruction::AddGEM(G4LogicalVolume *mother, int layerid, bool
     G4SubtractionSolid *solidGEMCon = new G4SubtractionSolid(Form("GEM%dContainerS", layerid), GEMConBox, GEMConTube);
     G4LogicalVolume *logicGEMCon = new G4LogicalVolume(solidGEMCon, DefaultM, Form("GEM%dContainerLV", layerid));
     logicGEMCon->SetVisAttributes(G4VisAttributes::Invisible);
-    new G4PVPlacement(0, G4ThreeVector(0, 0, GEMCenter), logicGEMCon, Form("GEM %d Container", layerid), mother, false, 2 * layerid);
+    new G4PVPlacement(GEMRot, GEMPos, logicGEMCon, Form("GEM %d Container", layerid), mother, false, 2 * layerid);
 
     // GEM
     G4Box *GEMBox = new G4Box(Form("GEM%dBox", layerid), GEMHalfX + GEMFrameWidth, GEMHalfY + GEMFrameWidth * 2.0, GEMHalfT);

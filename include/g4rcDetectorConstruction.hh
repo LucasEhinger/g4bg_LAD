@@ -2,6 +2,8 @@
 #define g4rcDetectorConstruction_h 
 
 #include "G4VUserDetectorConstruction.hh"
+#include "G4RotationMatrix.hh"
+#include "G4ThreeVector.hh"
 
 class g4rcMaterial;
 
@@ -26,7 +28,7 @@ private:
 
 	g4rcMaterial* fMaterial;
 
-	void AddGEM(G4LogicalVolume*, int, bool);
+	void AddGEM(G4LogicalVolume*, int, bool, double, double, G4RotationMatrix*, G4ThreeVector);
 	G4double fGEMCenter[1];
 
 
