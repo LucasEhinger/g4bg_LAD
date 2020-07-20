@@ -77,6 +77,8 @@ void g4rcIO::InitializeTree(){
     fTree->Branch("hit.e",    &fDetHit_E,   "hit.e[hit.n]/D");
     fTree->Branch("hit.m",    &fDetHit_M,   "hit.m[hit.n]/D");
 
+    fTree->Branch("hit.edep", &fDetHit_Edep, "hit.edep[hit.n]/D");
+
     return;
 }
 
@@ -168,6 +170,8 @@ void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
     fDetHit_P[n]  = hit->fP/__E_UNIT;
     fDetHit_E[n]  = hit->fE/__E_UNIT;
     fDetHit_M[n]  = hit->fM/__E_UNIT;
+
+    fDetHit_Edep[n] = hit->fEdep/__E_UNIT;
 
     fNDetHit++;
 

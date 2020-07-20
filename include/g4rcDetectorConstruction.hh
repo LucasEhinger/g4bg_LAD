@@ -6,6 +6,7 @@
 #include "G4ThreeVector.hh"
 
 class g4rcMaterial;
+class G4SDManager;
 
 class g4rcDetectorConstruction : public G4VUserDetectorConstruction {
 	
@@ -31,6 +32,7 @@ private:
 	void AddGEM(G4LogicalVolume*, int, bool, double, double, G4RotationMatrix*, G4ThreeVector);
 	G4double fGEMCenter[1];
 
+	G4SDManager* SDman;
 
 	void GetTargetIndex(G4String);
 

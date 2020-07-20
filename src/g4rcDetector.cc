@@ -40,11 +40,13 @@ G4bool g4rcDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4StepPoint *prestep = step->GetPreStepPoint();
     G4Track     *track   = step->GetTrack();
 
+
+    G4double Edep = step->GetTotalEnergyDeposit();
+
+
 //    G4Material* material = track->GetMaterial();
 
 //    printf("Standard detector %d hit by %s!\n", fDetNo, track->GetParticleDefinition()->GetParticleName().data());
-
-//    G4double edep = step->GetTotalEnergyDeposit();
 
     //  Make pointer to new hit if it's a valid track
     g4rcDetectorHit *thishit;
@@ -67,6 +69,10 @@ G4bool g4rcDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 	thishit->fTrID  = track->GetTrackID();
 	thishit->fmTrID = track->GetParentID();
 	thishit->fPID   = track->GetDefinition()->GetPDGEncoding();
+
+	if(Edep > 0.) { 
+		thishit->AddEdep(Edep);
+	}
 
 	// FIXME - Enumerate encodings
 	thishit->fGen   = (long int) track->GetCreatorProcess();

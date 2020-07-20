@@ -82,6 +82,7 @@ class g4rcIO {
 	Double_t fDetHit_E[__IO_MAXHIT];
 	Double_t fDetHit_M[__IO_MAXHIT];
 
+	Double_t fDetHit_Edep[__IO_MAXHIT];
 
 };
 

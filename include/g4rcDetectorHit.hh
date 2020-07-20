@@ -15,11 +15,15 @@ class g4rcDetectorHit : public G4VHit {
 	const g4rcDetectorHit& operator=(const g4rcDetectorHit &right);
 	G4int operator==(const g4rcDetectorHit &right) const;
 
+	void AddEdep(G4double stepEdep);
+	G4double GetEdep();
+
 	inline void *operator new(size_t);
 	inline void operator delete(void *aHit);
 	void *operator new(size_t,void*p){return p;}
 
     private:
+
 
     public:
 	G4int fDetID;
@@ -37,6 +41,8 @@ class g4rcDetectorHit : public G4VHit {
 	G4int    fTrID, fPID, fmTrID;
 	// Process generator type
 	G4int    fGen;
+
+	G4double fEdep;	
 };
 
 

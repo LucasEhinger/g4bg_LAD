@@ -11,6 +11,8 @@ g4rcDetectorHit::g4rcDetectorHit(G4int det, G4int copy){
     f3V = G4ThreeVector(-1e9, -1e9, -1e9);
     f3D = G4ThreeVector(-1e9, -1e9, -1e9);
 
+    fEdep = 0.0;	
+
     fP  = -1.0;
     fE  = -1.0;
     fM  = -1.0;
@@ -35,6 +37,8 @@ g4rcDetectorHit::g4rcDetectorHit(const g4rcDetectorHit &right) : G4VHit(){
     f3D     = right.f3D;
     f3V     = right.f3V;
 
+    fEdep   = right.fEdep;
+
     fP      = right.fP;
     fE      = right.fE;
     fM      = right.fM;
@@ -53,3 +57,13 @@ const g4rcDetectorHit& g4rcDetectorHit::operator =(const g4rcDetectorHit &right)
 G4int g4rcDetectorHit::operator==(const g4rcDetectorHit &right ) const {
     return (this==&right) ? 1 : 0;
 }
+
+void g4rcDetectorHit::AddEdep(G4double thisEdep) {
+	fEdep += thisEdep;
+}
+
+G4double g4rcDetectorHit::GetEdep() {
+	return fEdep;
+}
+
+

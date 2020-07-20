@@ -32,6 +32,7 @@ g4rcDetectorConstruction::~g4rcDetectorConstruction(){;}
 G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
     
 
+	SDman = G4SDManager::GetSDMpointer();
 	fMaterial = g4rcMaterial::GetMaterialManager();
 
 	G4double length = 20.0*cm;
@@ -122,6 +123,18 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4RotationMatrix* rot_gem = new G4RotationMatrix();
 	rot_gem->rotateY(180.*deg - gem_angle);
 
+/*
+	// A "dumb" GEM for debugging
+	
+	G4Box* gem1_box = new G4Box("gem1_box", w_gem1/2., h_gem1/2., 2.5*cm);  
+	G4LogicalVolume* gem1_log = new G4LogicalVolume(gem1_box, fMaterial->vacuum, "gem1_log", 0, 0, 0);
+	g4rcDetector* gem1_SD = new g4rcDetector("gem1_SD",501);
+	SDman->AddNewDetector(gem1_SD);
+	gem1_log->SetSensitiveDetector(gem1_SD);
+	G4VPhysicalVolume* gem1_phys = new G4PVPlacement(rot_gem, G4ThreeVector(30.*cm, 0., -30.*cm), gem1_log, "gem1_physical", world_log, false, 0);
+*/
+
+
 	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
 	AddGEM(world_log, 102, false, 55.04*cm, 122.88*cm, rot_gem, pos2);
 
@@ -211,6 +224,11 @@ void g4rcDetectorConstruction::AddGEM(G4LogicalVolume *mother, int layerid, bool
 //    G4Box *GEMSubBox = new G4Box(Form("GEM%dSubBox", layerid), GEMCenterHalfXY, GEMCenterHalfXY, GEMHalfT + 0.1 * mm);
 //    G4SubtractionSolid *solidGEMGas = new G4SubtractionSolid(Form("GEM%dGasS", layerid), GEMGasBox, GEMSubBox, 0, G4ThreeVector(-GEMCenterOffset, 0, 0));
     G4LogicalVolume *logicGEMGas = new G4LogicalVolume(solidGEMGas, GEMGasM, Form("GEM%dGasLV", layerid));
+
+	g4rcDetector* GEM_SD = new g4rcDetector(Form("GEM_SD_%i", layerid),layerid);
+	SDman->AddNewDetector(GEM_SD);
+	logicGEMGas->SetSensitiveDetector(GEM_SD);
+
 	G4VisAttributes* GEM_gas_vis = new G4VisAttributes(G4Colour(0.5,0.,1.));
 	logicGEMGas->SetVisAttributes(GEM_gas_vis);
     new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicGEMGas, Form("GEM %d Gas", layerid), logicGEM, false, 0);
