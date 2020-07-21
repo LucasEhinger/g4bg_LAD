@@ -67,6 +67,11 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4RotationMatrix* rotX_pos90 = new G4RotationMatrix();
 	rotX_pos90->rotateX(90.*deg);
 
+	// Target chamber exit window
+	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 20.*cm ,0.*deg, 360.*deg);
+	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
+	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(0,G4ThreeVector(), chamber_log, "chamber_physical", target_mother_log, false, 0); 
+
 	// Target cell
 
 	G4Tubs* cell_tubs = new G4Tubs("cell_tubs", 0., radius + wall, length/2. + window, 0.*deg, 360.*deg);
