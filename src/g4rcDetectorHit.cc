@@ -66,4 +66,10 @@ G4double g4rcDetectorHit::GetEdep() {
 	return fEdep;
 }
 
+void g4rcDetectorHit::SetTrackID(G4int thisTrackID) {
+	fTrackID = thisTrackID;
+}
 
+G4int g4rcDetectorHit::GetTrackID() {
+	return fTrackID;
+}

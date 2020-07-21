@@ -1,5 +1,6 @@
 #include "g4rcDetector.hh"
 #include "G4SDManager.hh"
+#include "G4String.hh"
 
 g4rcDetector::g4rcDetector( G4String name, G4int detnum ) : G4VSensitiveDetector(name){
     char colname[255];
@@ -40,20 +41,28 @@ G4bool g4rcDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
     G4StepPoint *prestep = step->GetPreStepPoint();
     G4Track     *track   = step->GetTrack();
 
-
-    G4double Edep = step->GetTotalEnergyDeposit();
-
+    	G4double Edep = step->GetTotalEnergyDeposit();
+	G4int trackID = track->GetTrackID();
+	G4int parentID = track->GetParentID();
 
 //    G4Material* material = track->GetMaterial();
 
 //    printf("Standard detector %d hit by %s!\n", fDetNo, track->GetParticleDefinition()->GetParticleName().data());
+    
+	g4rcDetectorHit *thishit = NULL;
+	
+	for (G4int i = fHitColl->entries() - 1; i >= 0; i--) {
+		if ( ((*fHitColl)[i]->GetTrackID() == trackID) || ((*fHitColl)[i]->GetTrackID() == parentID)  ) {
+			thishit = (*fHitColl)[i];
+			break;
+		}
+	}
 
-    //  Make pointer to new hit if it's a valid track
-    g4rcDetectorHit *thishit;
-    if( !badhit ){
-	thishit = new g4rcDetectorHit(fDetNo, copyID);
-	fHitColl->insert( thishit );
-    }
+	if(!thishit && !badhit) {
+		thishit = new g4rcDetectorHit(fDetNo, copyID);
+		thishit->SetTrackID(trackID);
+        	fHitColl->insert( thishit );
+	}
 
     if( !badhit ){
 	// Hit

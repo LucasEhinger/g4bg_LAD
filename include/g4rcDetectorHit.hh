@@ -18,12 +18,15 @@ class g4rcDetectorHit : public G4VHit {
 	void AddEdep(G4double stepEdep);
 	G4double GetEdep();
 
+	G4int GetTrackID();
+	void SetTrackID(G4int);
+
 	inline void *operator new(size_t);
 	inline void operator delete(void *aHit);
 	void *operator new(size_t,void*p){return p;}
 
     private:
-
+	G4int fTrackID;
 
     public:
 	G4int fDetID;
