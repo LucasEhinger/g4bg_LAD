@@ -55,7 +55,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// TARGET CHAMBER
 
-	double t_chamber = 0.406*mm;
+//	double t_chamber = 0.406*mm;
+	double t_chamber = 0.5*mm;
 	double r_chamber = (1037./2.)*mm;
 	
 	G4Tubs* target_mother_tubs = new G4Tubs("targ_mother_tubs", 0., r_chamber+t_chamber, 25.*cm, 0.*deg, 360.*deg);
@@ -66,11 +67,18 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	rotX_neg90->rotateX(-90.*deg);
 	G4RotationMatrix* rotX_pos90 = new G4RotationMatrix();
 	rotX_pos90->rotateX(90.*deg);
-
+/*
 	// Target chamber exit window
-	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 20.*cm ,0.*deg, 360.*deg);
+	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 40.*cm ,0.*deg, 360.*deg);
 	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
 	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(0,G4ThreeVector(), chamber_log, "chamber_physical", target_mother_log, false, 0); 
+*/
+	
+	// Plastic film
+	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 40.*cm ,0.*deg, 360.*deg);
+	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->poly, "chamber_logical", 0,0,0);
+	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(0,G4ThreeVector(), chamber_log, "chamber_physical", target_mother_log, false, 0); 
+
 
 	// Target cell
 

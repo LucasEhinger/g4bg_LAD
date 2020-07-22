@@ -119,6 +119,7 @@ void g4rcMaterial::ConstructMaterials() {
 
 	H2_liquid = fNistMan->FindOrBuildMaterial("G4_lH2");
 
+	poly = fNistMan->FindOrBuildMaterial("G4_POLYETHYLENE");
 	
 	// ----  gas and liquid deuterium
 

@@ -53,7 +53,7 @@ public:
 	G4Material* Copper0d2;
 	G4Material* Copper0d75;
 	G4Material* Copper0d8;
-
+	G4Material* poly;
 
 
 };
