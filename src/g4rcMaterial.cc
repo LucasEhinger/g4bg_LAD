@@ -134,6 +134,10 @@ void g4rcMaterial::ConstructMaterials() {
 	D2_liquid = new G4Material("LD2", 0.174*g/cm3, 1, kStateLiquid, 19.0*kelvin);
 	D2_liquid->AddElement(deuterium, 2);
 
+	// Hydrogen Gas (T = 19.5 K, P = 470 mTorr)
+	H2_gas = new G4Material("H2_gas", density = 0.47 / 760.0 * 273.15 / 19.5 * 0.08988 * mg / cm3, 
+						ncomponents = 1, kStateGas, 19.5 * kelvin, 0.47 / 760.0 * atmosphere);
+	H2_gas->AddElement(H, natoms = 2);
 
 	//A pressure that causes the Hg column to rise 1 millimeter is called ONE torr (1mm Hg)
 	// Vacuum of 1.e-6 torr at room temperature,  1 atmosphere = 101325*pascal = 760 *torr

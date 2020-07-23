@@ -44,21 +44,21 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	
 	double world_x, world_y, world_z;
 
-	world_x = world_y = world_z = 3*m;
+	world_x = world_y = world_z = 6.*m;
 
 	G4Box* world_box = new G4Box("world",world_x,world_y,world_z);
 
 	G4LogicalVolume* world_log
-	= new G4LogicalVolume(world_box,fMaterial->air,"World",0,0,0);
+	= new G4LogicalVolume(world_box,fMaterial->vacuum,"World",0,0,0);
 
 	world_log->SetVisAttributes(G4VisAttributes::Invisible);
 
 	// TARGET CHAMBER
 
-	double r_chamber = (1037./2.)*mm;
+	double r_chamber = 40.*cm;
 	double t_chamber = 0.406*mm;
-	
-	G4Tubs* target_mother_tubs = new G4Tubs("targ_mother_tubs", 0., r_chamber+t_chamber, 50.*cm, 0.*deg, 360.*deg);
+
+	G4Tubs* target_mother_tubs = new G4Tubs("targ_mother_tubs", 0., 50.*cm, 50.*cm, 0.*deg, 360.*deg);
 	G4LogicalVolume* target_mother_log = new G4LogicalVolume(target_mother_tubs,fMaterial->vacuum,"target_mother_logical",0,0,0);
 	target_mother_log->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -67,6 +67,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4RotationMatrix* rotX_pos90 = new G4RotationMatrix();
 	rotX_pos90->rotateX(90.*deg);
 
+/*
 	// Target chamber exit window
 	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 40.*cm ,0.*deg, 360.*deg);
 	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
@@ -86,21 +87,36 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
 	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
-
-
-/*
-	// Beryllium window (upstream of target)
-	
-	double t_be = 0.2003*mm;
-	G4Tubs* be_tubs = new G4Tubs("be_tubs", 0., 5.*cm, t_be/2., 0.*deg, 360.*deg);
-	G4LogicalVolume* be_log = new G4LogicalVolume(be_tubs, fMaterial->beryllium, "be_logical", 0,0,0);
-	G4VisAttributes* be_vis = new G4VisAttributes(G4Colour(1.,1.,0.));
-	be_log->SetVisAttributes(be_vis);
-	G4VPhysicalVolume* be_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(0.,-30.*cm,0.), be_log, "be_physical", target_mother_log, false, 0);
 */
-	
+
 	G4VPhysicalVolume* target_mother_phys 
 	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
+
+	// Target material
+	G4double TargetR = 25.0 * mm;
+	G4double TargetHalfL = 20.0 * mm;
+	G4VSolid *solidTarget = new G4Tubs("TargetS", 0, TargetR, TargetHalfL, 0, twopi);
+	G4LogicalVolume *logicTarget = new G4LogicalVolume(solidTarget, fMaterial->H2_gas, "TargetLV");
+	new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicTarget, "Target Material", target_mother_log, false, 0);
+
+	// Target cell
+	G4double CellXY = 3.5 * cm;
+	G4Box *CellBox = new G4Box("CellBox", CellXY, CellXY, TargetHalfL);
+	G4Tubs *CellTube = new G4Tubs("CellTube", 0, TargetR, TargetHalfL + 1.0 * mm, 0, twopi);
+	G4SubtractionSolid *solidCell = new G4SubtractionSolid("TargetCellS", CellBox, CellTube);
+	G4LogicalVolume *logicCell = new G4LogicalVolume(solidCell, fMaterial->Copper, "TargetCellLV");
+	new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicCell, "Target Cell", target_mother_log, false, 0);
+
+	// Target cell windows
+	G4double CellApertureR = 2.0 * mm;
+	G4double CellWinThickness = 7.5 * um;
+	G4Box *CellWinBox = new G4Box("CellWinBox", CellXY, CellXY, CellWinThickness / 2.0);
+	G4Tubs *CellWinTube = new G4Tubs("CellWinTube", 0, CellApertureR, CellWinThickness + 1.0 * mm, 0, twopi);
+	G4SubtractionSolid *solidCellWin = new G4SubtractionSolid("TargetWindowS", CellWinBox, CellWinTube);
+	G4LogicalVolume *logicCellWin = new G4LogicalVolume(solidCellWin, fMaterial->Kapton, "TargetWindowLV");
+	new G4PVPlacement(0, G4ThreeVector(0, 0, -TargetHalfL - CellWinThickness / 2.0), logicCellWin, "Target Window", world_log, false, 0);
+	new G4PVPlacement(0, G4ThreeVector(0, 0, +TargetHalfL + CellWinThickness / 2.0), logicCellWin, "Target Window", world_log, false, 1);
+
 
 	// Define the LAD GEMs
 	double h_gem = 122.88*cm;
@@ -141,7 +157,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	// Plastic film
 	double h_poly = h_gem + 5.*cm;
 	double w_poly = w_gem + 5.*cm;
-	double t_poly = 2.*cm;
+	double t_poly = 3.*cm;
 	double r_poly = 50.*cm;
 	
 	double x_poly = r_poly*sin(gem_angle);
@@ -151,6 +167,9 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	G4Box* poly_box = new G4Box("poly_box", w_poly/2., h_poly/2., t_poly/2.);
 	G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->poly, "poly_logical", 0, 0, 0);
+	g4rcDetector* poly_SD = new g4rcDetector("poly_SD", 301);
+	SDman->AddNewDetector(poly_SD);
+	poly_log->SetSensitiveDetector(poly_SD);
 	G4VPhysicalVolume* poly_phys = new G4PVPlacement(rot_gem, pos_poly, poly_log, "poly_physical", world_log, false, 0); 
 
 //	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
@@ -183,6 +202,27 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VPhysicalVolume* gmn_phys = new G4PVPlacement(rot_gmn, pos_gmn, gmn_log, "gmn_physical", world_log, false, 0);
 
 //	AddGEM(world_log, 201, false, 50.*cm, 50.*cm, rot_gmn, pos_gmn); 	
+
+
+	// PRad GEM
+	
+	double w_prad = 2. * 55.04*cm;
+	double h_prad = 122.88*cm; 
+	double t_prad = 1.*cm;	
+	double r_hole = 2.2*cm; 
+
+	double z_prad = 5.5*m;
+
+	G4ThreeVector pos_prad = G4ThreeVector(0., 0., z_prad);
+
+	G4RotationMatrix* rot_prad;
+
+	G4Box* prad_box_add = new G4Box("prad_box_uadd", w_prad/2., h_prad/2., t_prad/2.);
+	G4Tubs* prad_tubs_sub = new G4Tubs("prad_tubs_usub", 0., r_hole, t_prad/2. + 1.*mm, 0.*deg, 360.*deg);
+	G4SubtractionSolid* prad_box = new G4SubtractionSolid("prad_box", prad_box_add, prad_tubs_sub);
+	G4LogicalVolume* prad_log = new G4LogicalVolume(prad_box, fMaterial->vacuum, "prad_log", 0, 0, 0);
+	G4VPhysicalVolume* prad_phys = new G4PVPlacement(rot_prad, pos_prad, prad_log, "prad_physical", world_log, false, 0);
+	
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);

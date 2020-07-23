@@ -30,7 +30,6 @@ private:
 public:
 
 	G4Material* vacuum;
-	G4Material* H2_gas;
 	G4Material* D2_gas;
 	G4Material* T2_gas;
 	G4Material* He_gas;
@@ -40,6 +39,7 @@ public:
 	G4Material* kapton;
 	G4Material* H2_liquid;
 	G4Material* D2_liquid;
+	G4Material* H2_gas;
 
 
 	G4Material* Galaxy;
