@@ -67,7 +67,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4RotationMatrix* rotX_pos90 = new G4RotationMatrix();
 	rotX_pos90->rotateX(90.*deg);
 
-/*
+
 	// Target chamber exit window
 	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 40.*cm ,0.*deg, 360.*deg);
 	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0);
@@ -87,12 +87,13 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	gas_log->SetVisAttributes(gas_vis);
 	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
-*/
+
 
 	G4VPhysicalVolume* target_mother_phys 
-//	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
-	= new G4PVPlacement(0,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0);  // for PRad target 
+	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
+//	= new G4PVPlacement(0,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0);  // for PRad target 
 
+/*
 	// Target material
 	G4double TargetR = 25.0 * mm;
 	G4double TargetHalfL = 20.0 * mm;
@@ -117,7 +118,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4LogicalVolume *logicCellWin = new G4LogicalVolume(solidCellWin, fMaterial->Kapton, "TargetWindowLV");
 	new G4PVPlacement(0, G4ThreeVector(0, 0, -TargetHalfL - CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 0);
 	new G4PVPlacement(0, G4ThreeVector(0, 0, +TargetHalfL + CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 1);
-
+*/
 
 	// Define the LAD GEMs
 	double h_gem = 122.88*cm;
@@ -158,7 +159,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	// Plastic film
 	double h_poly = h_gem + 5.*cm;
 	double w_poly = w_gem + 5.*cm;
-	double t_poly = 3.*cm;
+	double t_poly = 0.5*cm;
 	double r_poly = 50.*cm;
 	
 	double x_poly = r_poly*sin(gem_angle);
@@ -206,7 +207,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 
 	// PRad GEM
-	
+/*	
 	double w_prad = 2. * 55.04*cm;
 	double h_prad = 122.88*cm; 
 	double t_prad = 1.*cm;	
@@ -223,7 +224,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4SubtractionSolid* prad_box = new G4SubtractionSolid("prad_box", prad_box_add, prad_tubs_sub);
 	G4LogicalVolume* prad_log = new G4LogicalVolume(prad_box, fMaterial->vacuum, "prad_log", 0, 0, 0);
 	G4VPhysicalVolume* prad_phys = new G4PVPlacement(rot_prad, pos_prad, prad_log, "prad_physical", world_log, false, 0);
-	
+*/	
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
