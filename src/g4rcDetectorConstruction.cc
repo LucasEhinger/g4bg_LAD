@@ -90,7 +90,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 */
 
 	G4VPhysicalVolume* target_mother_phys 
-	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
+//	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
+	= new G4PVPlacement(0,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0);  // for PRad target 
 
 	// Target material
 	G4double TargetR = 25.0 * mm;
@@ -114,8 +115,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4Tubs *CellWinTube = new G4Tubs("CellWinTube", 0, CellApertureR, CellWinThickness + 1.0 * mm, 0, twopi);
 	G4SubtractionSolid *solidCellWin = new G4SubtractionSolid("TargetWindowS", CellWinBox, CellWinTube);
 	G4LogicalVolume *logicCellWin = new G4LogicalVolume(solidCellWin, fMaterial->Kapton, "TargetWindowLV");
-	new G4PVPlacement(0, G4ThreeVector(0, 0, -TargetHalfL - CellWinThickness / 2.0), logicCellWin, "Target Window", world_log, false, 0);
-	new G4PVPlacement(0, G4ThreeVector(0, 0, +TargetHalfL + CellWinThickness / 2.0), logicCellWin, "Target Window", world_log, false, 1);
+	new G4PVPlacement(0, G4ThreeVector(0, 0, -TargetHalfL - CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 0);
+	new G4PVPlacement(0, G4ThreeVector(0, 0, +TargetHalfL + CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 1);
 
 
 	// Define the LAD GEMs
