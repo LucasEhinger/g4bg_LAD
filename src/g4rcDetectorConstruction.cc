@@ -22,6 +22,8 @@
 g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
 	fGEMCenter[0] = 229.99575 * cm;	
+	fPolyBool = 0;
+	fPolyThick = 0.0;
 
 }
 
@@ -80,49 +82,23 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	G4LogicalVolume* cell_log = new G4LogicalVolume(cell_sub, fMaterial->aluminum, "cell_logical", 0, 0, 0);
 	G4VPhysicalVolume* cell_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), cell_log, "cell_physical", target_mother_log, false, 0);
 
-	// Target gas volume
-	G4Tubs* gas_tubs = new G4Tubs("gas_tubs", 0., radius, length/2., 0.*deg, 360.*deg);
-//	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, target_gas[fTargIndex], "gas_logical", 0,0,0);
-	G4LogicalVolume* gas_log = new G4LogicalVolume(gas_tubs, fMaterial->D2_liquid, "gas_logical", 0,0,0);
-	G4VisAttributes* gas_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
-	gas_log->SetVisAttributes(gas_vis);
-	G4VPhysicalVolume* gas_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), gas_log, "gas_physical", target_mother_log, false, 0);	
+	// Target liquid volume
+	G4Tubs* liquid_tubs = new G4Tubs("liquie_tubs", 0., radius, length/2., 0.*deg, 360.*deg);
+	G4LogicalVolume* liquid_log = new G4LogicalVolume(liquid_tubs, fMaterial->D2_liquid, "liquid_logical", 0,0,0);
+	G4VisAttributes* liquid_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
+	liquid_log->SetVisAttributes(liquid_vis);
+	G4VPhysicalVolume* liquid_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), liquid_log, "liquid_physical", target_mother_log, false, 0);	
 
 
 	G4VPhysicalVolume* target_mother_phys 
 	= new G4PVPlacement(rotX_neg90,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0); 
-//	= new G4PVPlacement(0,G4ThreeVector(), target_mother_log, "target_mother_physical", world_log, false, 0);  // for PRad target 
 
-/*
-	// Target material
-	G4double TargetR = 25.0 * mm;
-	G4double TargetHalfL = 20.0 * mm;
-	G4VSolid *solidTarget = new G4Tubs("TargetS", 0, TargetR, TargetHalfL, 0, twopi);
-	G4LogicalVolume *logicTarget = new G4LogicalVolume(solidTarget, fMaterial->H2_gas, "TargetLV");
-	new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicTarget, "Target Material", target_mother_log, false, 0);
 
-	// Target cell
-	G4double CellXY = 3.5 * cm;
-	G4Box *CellBox = new G4Box("CellBox", CellXY, CellXY, TargetHalfL);
-	G4Tubs *CellTube = new G4Tubs("CellTube", 0, TargetR, TargetHalfL + 1.0 * mm, 0, twopi);
-	G4SubtractionSolid *solidCell = new G4SubtractionSolid("TargetCellS", CellBox, CellTube);
-	G4LogicalVolume *logicCell = new G4LogicalVolume(solidCell, fMaterial->Copper, "TargetCellLV");
-	new G4PVPlacement(0, G4ThreeVector(0, 0, 0), logicCell, "Target Cell", target_mother_log, false, 0);
-
-	// Target cell windows
-	G4double CellApertureR = 2.0 * mm;
-	G4double CellWinThickness = 7.5 * um;
-	G4Box *CellWinBox = new G4Box("CellWinBox", CellXY, CellXY, CellWinThickness / 2.0);
-	G4Tubs *CellWinTube = new G4Tubs("CellWinTube", 0, CellApertureR, CellWinThickness + 1.0 * mm, 0, twopi);
-	G4SubtractionSolid *solidCellWin = new G4SubtractionSolid("TargetWindowS", CellWinBox, CellWinTube);
-	G4LogicalVolume *logicCellWin = new G4LogicalVolume(solidCellWin, fMaterial->Kapton, "TargetWindowLV");
-	new G4PVPlacement(0, G4ThreeVector(0, 0, -TargetHalfL - CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 0);
-	new G4PVPlacement(0, G4ThreeVector(0, 0, +TargetHalfL + CellWinThickness / 2.0), logicCellWin, "Target Window", target_mother_log, false, 1);
-*/
+	// Start of simple GEM detector definition	
 
 	// Define the LAD GEMs
-	double h_gem = 122.88*cm;
-	double w_gem = 55.04*cm;
+	double w_gem = 122.88*cm;
+	double h_gem = 55.04*cm;
 	double t_gem = 1.*cm;
 	
 	double r_gem1 = 70.*cm;
@@ -159,7 +135,6 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	// Plastic film
 	double h_poly = h_gem + 5.*cm;
 	double w_poly = w_gem + 5.*cm;
-	double t_poly = 0.5*cm;
 	double r_poly = 50.*cm;
 	
 	double x_poly = r_poly*sin(gem_angle);
@@ -167,15 +142,14 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	G4ThreeVector pos_poly = G4ThreeVector(x_poly, 0., z_poly);
 
-	G4Box* poly_box = new G4Box("poly_box", w_poly/2., h_poly/2., t_poly/2.);
-	G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->poly, "poly_logical", 0, 0, 0);
-	g4rcDetector* poly_SD = new g4rcDetector("poly_SD", 301);
-	SDman->AddNewDetector(poly_SD);
-	poly_log->SetSensitiveDetector(poly_SD);
-	G4VPhysicalVolume* poly_phys = new G4PVPlacement(rot_gem, pos_poly, poly_log, "poly_physical", world_log, false, 0); 
-
-//	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
-//	AddGEM(world_log, 102, false, 55.04*cm, 122.88*cm, rot_gem, pos2);
+	if(fPolyBool == 1) {
+		G4Box* poly_box = new G4Box("poly_box", w_poly/2., h_poly/2., fPolyThick/2.);
+		G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->poly, "poly_logical", 0, 0, 0);
+		g4rcDetector* poly_SD = new g4rcDetector("poly_SD", 301);
+		SDman->AddNewDetector(poly_SD);
+		poly_log->SetSensitiveDetector(poly_SD);
+		G4VPhysicalVolume* poly_phys = new G4PVPlacement(rot_gem, pos_poly, poly_log, "poly_physical", world_log, false, 0); 
+	}
 
 	// Define the GMn GEMs
 	
@@ -203,28 +177,18 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	gmn_log->SetSensitiveDetector(gmn_SD);
 	G4VPhysicalVolume* gmn_phys = new G4PVPlacement(rot_gmn, pos_gmn, gmn_log, "gmn_physical", world_log, false, 0);
 
-//	AddGEM(world_log, 201, false, 50.*cm, 50.*cm, rot_gmn, pos_gmn); 	
+	// End of simple GEM detector definition
 
+	
+/*
+	// Start of full GEM detector definition
 
-	// PRad GEM
-/*	
-	double w_prad = 2. * 55.04*cm;
-	double h_prad = 122.88*cm; 
-	double t_prad = 1.*cm;	
-	double r_hole = 2.2*cm; 
-
-	double z_prad = 5.5*m;
-
-	G4ThreeVector pos_prad = G4ThreeVector(0., 0., z_prad);
-
-	G4RotationMatrix* rot_prad;
-
-	G4Box* prad_box_add = new G4Box("prad_box_uadd", w_prad/2., h_prad/2., t_prad/2.);
-	G4Tubs* prad_tubs_sub = new G4Tubs("prad_tubs_usub", 0., r_hole, t_prad/2. + 1.*mm, 0.*deg, 360.*deg);
-	G4SubtractionSolid* prad_box = new G4SubtractionSolid("prad_box", prad_box_add, prad_tubs_sub);
-	G4LogicalVolume* prad_log = new G4LogicalVolume(prad_box, fMaterial->vacuum, "prad_log", 0, 0, 0);
-	G4VPhysicalVolume* prad_phys = new G4PVPlacement(rot_prad, pos_prad, prad_log, "prad_physical", world_log, false, 0);
-*/	
+	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
+	AddGEM(world_log, 102, false, 55.04*cm, 122.88*cm, rot_gem, pos2);
+	AddGEM(world_log, 201, false, 50.*cm, 50.*cm, rot_gmn, pos_gmn); 	
+	
+	// End of full GEM detector definition
+*/
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);

@@ -21,6 +21,8 @@ public:
 public:
 	G4String fHRS;
 	G4double fHRSAngle;	
+	G4double fPolyThick;
+	G4int fPolyBool;
 
 private:
 	G4int fTargIndex;

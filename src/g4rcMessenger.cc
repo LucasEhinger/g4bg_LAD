@@ -44,6 +44,14 @@ g4rcMessenger::g4rcMessenger(){
 	angleCmd->SetGuidance("Set HRS angle");
 	angleCmd->SetParameterName("angle",false);	
 
+	polyCmd = new G4UIcmdWithAnInteger("/g4rc/poly",this);
+	polyCmd->SetGuidance("Include poly?");
+	polyCmd->SetParameterName("poly",false);	
+
+	polyTCmd = new G4UIcmdWithADoubleAndUnit("/g4rc/polyT",this);
+	polyTCmd->SetGuidance("Set poly thickness");
+	polyTCmd->SetParameterName("polyT",false);	
+
 	targCmd = new G4UIcmdWithAString("/g4rc/target",this);
 	targCmd->SetGuidance("Set target");
 	targCmd->SetParameterName("targ",false);	
@@ -75,6 +83,16 @@ void g4rcMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 		fdetcon->fHRSAngle = angle;
 		fevact->fHRSAngle = angle;
 		fIO->fHRSangle = angle;	
+	}
+
+	if (cmd == polyCmd ) {
+		G4int poly = polyCmd->GetNewIntValue(newValue);
+		fdetcon->fPolyBool = poly;
+	}
+
+	if (cmd == polyTCmd ) {
+		G4double polyT = polyTCmd->GetNewDoubleValue(newValue);
+		fdetcon->fPolyThick = polyT;
 	}
 
 	if (cmd == targCmd) {
