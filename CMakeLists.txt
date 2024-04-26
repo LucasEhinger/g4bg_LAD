@@ -73,6 +73,7 @@ set(G4RC_SCRIPTS
     vis/vis.mac
     vis/X.mac
     macros/runexample.mac
+    macros/run_diff_thicknesses.mac
     macros/gui.mac
     macros/vis.mac
 )

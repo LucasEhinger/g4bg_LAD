@@ -33,6 +33,15 @@ g4rcPrimaryGeneratorAction::g4rcPrimaryGeneratorAction() {
 
 	fEbeam = 10.9*GeV;
 
+	fThetaMin=90.*deg;
+	fThetaMax=157.*deg;
+	fPhiMin=-17.*deg;
+	fPhiMax=17.*deg;
+
+	radius_start=40.*cm;
+
+	fPprotonMax=0.5*GeV;
+
   	fParticleGun = new G4ParticleGun(n_particle);
   	fDefaultEvent = new g4rcEvent();
 
@@ -59,17 +68,40 @@ void g4rcPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     // Set data //////////////////////////////////
     // Magic happens here
 
-	double xPos, yPos, zPos;	
+	double xPos, yPos, zPos;
+	double px, py, pz;
 
+	if(fProtBool == 0) {
 	xPos = CLHEP::RandFlat::shoot(fXmin, fXmax );
 	yPos = CLHEP::RandFlat::shoot(fYmin, fYmax );
 	
 	zPos = fZ;
 
+	
 	double mass = 0.511*MeV;
 	double p = sqrt(fEbeam*fEbeam - mass*mass);
 
 	fDefaultEvent->ProduceNewParticle(G4ThreeVector(xPos, yPos, zPos), G4ThreeVector(0., 0., p), "e-");
+	}
+	else{
+
+	double theta_p = CLHEP::RandFlat::shoot(fThetaMin, fThetaMax);
+	double phi_p = CLHEP::RandFlat::shoot(fPhiMin, fPhiMax);
+	theta_p=127.*deg;
+	phi_p=0.*deg;
+	double fPproton = CLHEP::RandFlat::shoot(0., fPprotonMax);
+
+	px = fPproton*sin(theta_p)*cos(phi_p);
+	py = fPproton*sin(theta_p)*sin(phi_p);
+	pz = fPproton*cos(theta_p);
+
+	xPos = radius_start*sin(theta_p)*cos(phi_p);
+	yPos = radius_start*sin(theta_p)*sin(phi_p);
+	zPos = radius_start*cos(theta_p);
+
+	fDefaultEvent->ProduceNewParticle(G4ThreeVector(xPos, yPos, zPos), G4ThreeVector(px, py, pz), "proton");
+	}
+
 
     	// Register and create event
 	double kinE = sqrt(fDefaultEvent->fPartMom[0].mag()*fDefaultEvent->fPartMom[0].mag()

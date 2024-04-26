@@ -1,0 +1,6 @@
+/g4rc/filename g4bg_out_5mm.root
+/g4rc/protonOnly 1
+/g4rc/poly 1
+/g4rc/polyT 5 mm
+/run/initialize
+/run/beamOn 1000000

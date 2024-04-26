@@ -44,6 +44,10 @@ g4rcMessenger::g4rcMessenger(){
 	angleCmd->SetGuidance("Set HRS angle");
 	angleCmd->SetParameterName("angle",false);	
 
+	protBoolCmd = new G4UIcmdWithAnInteger("/g4rc/protonOnly",this);
+	protBoolCmd->SetGuidance("Only Protons?");
+	protBoolCmd->SetParameterName("protBool",false);
+
 	polyCmd = new G4UIcmdWithAnInteger("/g4rc/poly",this);
 	polyCmd->SetGuidance("Include poly?");
 	polyCmd->SetParameterName("poly",false);	
@@ -85,10 +89,16 @@ void g4rcMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 		fIO->fHRSangle = angle;	
 	}
 
+	if (cmd == protBoolCmd ) {
+		G4int protBool = protBoolCmd->GetNewIntValue(newValue);
+		fprigen->fProtBool = protBool;
+	}
+
 	if (cmd == polyCmd ) {
 		G4int poly = polyCmd->GetNewIntValue(newValue);
 		fdetcon->fPolyBool = poly;
 	}
+
 
 	if (cmd == polyTCmd ) {
 		G4double polyT = polyTCmd->GetNewDoubleValue(newValue);

@@ -118,19 +118,19 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	rot_gem->rotateY(180.*deg - gem_angle);
 
 
-	G4Box* gem1_box = new G4Box("gem1_box", w_gem/2., h_gem/2., t_gem/2.);  
-	G4LogicalVolume* gem1_log = new G4LogicalVolume(gem1_box, fMaterial->vacuum, "gem1_log", 0, 0, 0);
-	g4rcDetector* gem1_SD = new g4rcDetector("gem1_SD",101);
-	SDman->AddNewDetector(gem1_SD);
-	gem1_log->SetSensitiveDetector(gem1_SD);
-	G4VPhysicalVolume* gem1_phys = new G4PVPlacement(rot_gem, pos1, gem1_log, "gem1_physical", world_log, false, 0);
+	// G4Box* gem1_box = new G4Box("gem1_box", w_gem/2., h_gem/2., t_gem/2.);  
+	// G4LogicalVolume* gem1_log = new G4LogicalVolume(gem1_box, fMaterial->vacuum, "gem1_log", 0, 0, 0);
+	// g4rcDetector* gem1_SD = new g4rcDetector("gem1_SD",101);
+	// SDman->AddNewDetector(gem1_SD);
+	// gem1_log->SetSensitiveDetector(gem1_SD);
+	// G4VPhysicalVolume* gem1_phys = new G4PVPlacement(rot_gem, pos1, gem1_log, "gem1_physical", world_log, false, 0);
 
-	G4Box* gem2_box = new G4Box("gem2_box", w_gem/2., h_gem/2., t_gem/2.);  
-	G4LogicalVolume* gem2_log = new G4LogicalVolume(gem2_box, fMaterial->vacuum, "gem2_log", 0, 0, 0);
-	g4rcDetector* gem2_SD = new g4rcDetector("gem2_SD",102);
-	SDman->AddNewDetector(gem2_SD);
-	gem2_log->SetSensitiveDetector(gem2_SD);
-	G4VPhysicalVolume* gem2_phys = new G4PVPlacement(rot_gem, pos2, gem2_log, "gem2_physical", world_log, false, 0);
+	// G4Box* gem2_box = new G4Box("gem2_box", w_gem/2., h_gem/2., t_gem/2.);  
+	// G4LogicalVolume* gem2_log = new G4LogicalVolume(gem2_box, fMaterial->vacuum, "gem2_log", 0, 0, 0);
+	// g4rcDetector* gem2_SD = new g4rcDetector("gem2_SD",102);
+	// SDman->AddNewDetector(gem2_SD);
+	// gem2_log->SetSensitiveDetector(gem2_SD);
+	// G4VPhysicalVolume* gem2_phys = new G4PVPlacement(rot_gem, pos2, gem2_log, "gem2_physical", world_log, false, 0);
 
 	// Plastic film
 	double h_poly = h_gem + 5.*cm;
@@ -144,7 +144,8 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	if(fPolyBool == 1) {
 		G4Box* poly_box = new G4Box("poly_box", w_poly/2., h_poly/2., fPolyThick/2.);
-		G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->poly, "poly_logical", 0, 0, 0);
+		// G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->poly, "poly_logical", 0, 0, 0);
+        G4LogicalVolume* poly_log = new G4LogicalVolume(poly_box, fMaterial->NemaG10, "poly_logical", 0, 0, 0);
 		g4rcDetector* poly_SD = new g4rcDetector("poly_SD", 301);
 		SDman->AddNewDetector(poly_SD);
 		poly_log->SetSensitiveDetector(poly_SD);
@@ -163,24 +164,24 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	double gmn_angle = 40.*deg;
 
 	double x_gmn = r_gmn*sin(gmn_angle);
-        double z_gmn = r_gmn*cos(gmn_angle);
+    double z_gmn = r_gmn*cos(gmn_angle);
 	
 	G4ThreeVector pos_gmn = G4ThreeVector(x_gmn, 0., z_gmn);
 
 	G4RotationMatrix* rot_gmn = new G4RotationMatrix();
         rot_gmn->rotateY(180.*deg - gmn_angle);
 
-	G4Box* gmn_box = new G4Box("gmn_box", w_gmn/2., h_gmn/2., t_gmn/2.);  
-	G4LogicalVolume* gmn_log = new G4LogicalVolume(gmn_box, fMaterial->vacuum, "gmn_log", 0, 0, 0);
-	g4rcDetector* gmn_SD = new g4rcDetector("gmn_SD",201);
-	SDman->AddNewDetector(gmn_SD);
-	gmn_log->SetSensitiveDetector(gmn_SD);
-	G4VPhysicalVolume* gmn_phys = new G4PVPlacement(rot_gmn, pos_gmn, gmn_log, "gmn_physical", world_log, false, 0);
+	// G4Box* gmn_box = new G4Box("gmn_box", w_gmn/2., h_gmn/2., t_gmn/2.);  
+	// G4LogicalVolume* gmn_log = new G4LogicalVolume(gmn_box, fMaterial->vacuum, "gmn_log", 0, 0, 0);
+	// g4rcDetector* gmn_SD = new g4rcDetector("gmn_SD",201);
+	// SDman->AddNewDetector(gmn_SD);
+	// gmn_log->SetSensitiveDetector(gmn_SD);
+	// G4VPhysicalVolume* gmn_phys = new G4PVPlacement(rot_gmn, pos_gmn, gmn_log, "gmn_physical", world_log, false, 0);
 
 	// End of simple GEM detector definition
 
 	
-/*
+
 	// Start of full GEM detector definition
 
 	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
@@ -188,7 +189,20 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	AddGEM(world_log, 201, false, 50.*cm, 50.*cm, rot_gmn, pos_gmn); 	
 	
 	// End of full GEM detector definition
-*/
+
+    // Plane of LAD Scintillator
+
+    double x_LAD = 1.2*r_gem2*sin(gem_angle);
+    double z_LAD = 1.2*r_gem2*cos(gem_angle);
+	G4ThreeVector pos_LAD = G4ThreeVector(x_LAD, 0., z_LAD);
+
+    G4Box* LAD_box = new G4Box("LAD_box", w_gem*4., h_gem*4., t_gem/2.);  
+	G4LogicalVolume* LAD_log = new G4LogicalVolume(LAD_box, fMaterial->vacuum, "LAD_log", 0, 0, 0);
+	g4rcDetector* LAD_SD = new g4rcDetector("LAD_SD",501);
+	SDman->AddNewDetector(LAD_SD);
+	LAD_log->SetSensitiveDetector(LAD_SD);
+	G4VPhysicalVolume* LAD_phys = new G4PVPlacement(rot_gem, pos_LAD, LAD_log, "LAD_physical", world_log, false, 0);
+
 
 	G4VPhysicalVolume* world_phys
 	= new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);

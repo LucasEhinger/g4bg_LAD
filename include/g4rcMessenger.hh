@@ -50,6 +50,7 @@ class g4rcMessenger : public G4UImessenger {
 	G4UIcmdWithAString   *fileCmd;
 
 	G4UIcmdWithADoubleAndUnit *angleCmd;
+	G4UIcmdWithAnInteger *protBoolCmd;
 	G4UIcmdWithAnInteger *polyCmd;
 	G4UIcmdWithADoubleAndUnit *polyTCmd;
 	G4UIcmdWithAString* targCmd;

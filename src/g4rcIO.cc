@@ -82,13 +82,24 @@ void g4rcIO::InitializeTree(){
     return;
 }
 
+bool g4rcIO::HasProtonHit(){
+    for( int i = 0; i < fNDetHit; i++ ){
+    if( fDetHit_pid[i] == 2212 ){
+        return true;
+    }
+    }
+
+    return false;
+}
 void g4rcIO::FillTree(){
     if( !fTree ){ 
 	fprintf(stderr, "Error %s: %s line %d - Trying to fill non-existant tree\n", __PRETTY_FUNCTION__, __FILE__, __LINE__ );
 	return; 
     }
 
-    fTree->Fill();
+    if( g4rcIO::HasProtonHit() ){
+        fTree->Fill();
+    }
 }
 
 void g4rcIO::Flush(){

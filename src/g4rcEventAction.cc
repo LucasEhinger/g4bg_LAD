@@ -66,7 +66,7 @@ void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
 	      }
 	  }
 	}
-
+	
 	// Fill tree and reset buffers
 	fIO->FillTree();
 	fIO->Flush();

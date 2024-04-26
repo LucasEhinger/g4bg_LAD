@@ -33,6 +33,7 @@ class g4rcIO {
 	void SetFilename(G4String  fn);
 	G4String GetFilename(){return fFilename;}
 
+	bool HasProtonHit();
 	void FillTree();
 	void Flush();
 	void WriteTree();

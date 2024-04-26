@@ -1,5 +1,6 @@
-/g4rc/filename g4bg_out.root
-/g4rc/poly 1
-/g4rc/polyT 1 mm
+/g4rc/filename g4bg_out_write_protons.root
+/g4rc/protonOnly 0
+/g4rc/poly 0
+/g4rc/polyT 125 um
 /run/initialize
 /run/beamOn 1000000

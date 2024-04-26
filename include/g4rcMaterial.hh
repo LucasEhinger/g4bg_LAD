@@ -55,6 +55,14 @@ public:
 	G4Material* Copper0d8;
 	G4Material* poly;
 
+	// GEMs materials
+  	G4Material* NEMAG10;
+  	G4Material* NOMEX_pure;
+  	G4Material* NOMEX;
+  	G4Material *GEMCopper;
+  	G4Material *GEMKapton;
+	G4Material *GEMgas;
+
 
 };
 typedef g4rcMaterial g4rcMaterialManager;

@@ -34,6 +34,11 @@ public:
 	G4double fZ;
 	G4double fEbeam;
 
+	G4double fThetaMin, fThetaMax, fPhiMin, fPhiMax;
+	G4double radius_start;
+	G4double fPprotonMax;
+
+	G4double fProtBool;
 };
 
 #endif

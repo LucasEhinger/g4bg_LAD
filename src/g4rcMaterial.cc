@@ -58,6 +58,7 @@ void g4rcMaterial::ConstructMaterials() {
 	G4Element *Si = fNistMan->FindOrBuildElement(z = 14);
 	G4Element *P  = fNistMan->FindOrBuildElement(z = 15);
 	G4Element *S  = fNistMan->FindOrBuildElement(z = 16);
+	G4Element *Cl = fNistMan->FindOrBuildElement(z = 17);
 	G4Element *Ar = fNistMan->FindOrBuildElement(z = 18);
 	G4Element *K  = fNistMan->FindOrBuildElement(z = 19);
 	G4Element *Cr = fNistMan->FindOrBuildElement(z = 24);
@@ -71,9 +72,16 @@ void g4rcMaterial::ConstructMaterials() {
 	G4Element *Pb = fNistMan->FindOrBuildElement(z = 82);
 
 
+
 	// Space Vacuum
 	Galaxy = new G4Material("Galaxy", density = universe_mean_density, ncomponents = 1, kStateGas, 0.1 * kelvin, 1.0e-19 * pascal);
 	Galaxy->AddElement(H, fractionmass = 1.0);
+
+		// Air
+	air = new G4Material("air", density = 1.225*mg/cm3, ncomponents = 2, kStateGas, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
+	air->AddElement(N, 80.*perCent);
+	air->AddElement(O, 20.*perCent);
+
 //	fVisAtts[Galaxy->GetName()] = new G4VisAttributes(G4VisAttributes::Invisible);
 
 	// GEM Frame G10
@@ -84,14 +92,43 @@ void g4rcMaterial::ConstructMaterials() {
 	NemaG10->AddElement(H, natoms = 3);
 //	fVisAtts[NemaG10->GetName()] = new G4VisAttributes(G4Colour::Brown());
 
+	// GEM Nomex pure
+	NOMEX_pure = new G4Material("NOMEX_pure", density = fExtDensityRatio*1.38*g/cm3, 5);
+  	NOMEX_pure -> AddElement(H,0.04);
+  	NOMEX_pure -> AddElement(C,0.54);
+  	NOMEX_pure -> AddElement(N,0.09);
+  	NOMEX_pure -> AddElement(O,0.10);
+  	NOMEX_pure -> AddElement(Cl,0.23);
+
+	// GEM Nomex
+	NOMEX = new G4Material("NOMEX",density = fExtDensityRatio * 0.04*g/cm3, 2);
+  	NOMEX -> AddMaterial(NOMEX_pure,0.45);
+ 	NOMEX -> AddMaterial(air,0.55);
+  
+  // GEM Kapton
+  	GEMKapton = new G4Material("GEMKapton", density = fExtDensityRatio * 1.42*g/cm3, 4);
+	GEMKapton -> AddElement(H, 0.026362);
+  	GEMKapton -> AddElement(C, 0.691133);
+  	GEMKapton -> AddElement(N, 0.073270);
+  	GEMKapton -> AddElement(O, 0.209235);
+	
 	// Ar/CO2 Gas
-	CO2 = new G4Material("CO2", density = fExtDensityRatio * 1.842e-3 * g / cm3, ncomponents = 2);
-	CO2->AddElement(C, natoms = 1);
-	CO2->AddElement(O, natoms = 2);
-	ArCO2 = new G4Material("ArCO2", density = fExtDensityRatio * 1.715e-3 * g / cm3, ncomponents = 2);
-	ArCO2->AddElement(Ar, fractionmass = 0.7);
-	ArCO2->AddMaterial(CO2, fractionmass = 0.3);
-//	fVisAtts[ArCO2->GetName()] = new G4VisAttributes(G4Colour::Yellow());
+	 G4double density_Ar = 1.7823*mg/cm3 ;
+	G4Material* Argon = new G4Material("Argon" , density_Ar, 1);
+	Argon->AddElement(Ar, 1);
+	
+	G4double density_CO2 = 1.977*mg/cm3;
+	G4Material* CO2 = new G4Material("CO2", density_CO2, 2);
+	CO2->AddElement(C, 1);
+	CO2->AddElement(O, 2);
+
+	G4double density_ArCO2 = .7*density_Ar + .3*density_CO2;
+	// Use ArCO2
+	GEMgas= new G4Material("ArCO2", density_ArCO2, 2);
+	GEMgas -> AddMaterial(Argon, 0.7*density_Ar/density_ArCO2) ;
+	GEMgas -> AddMaterial(CO2, 0.3*density_CO2/density_ArCO2) ;
+
+	//	fVisAtts[ArCO2->GetName()] = new G4VisAttributes(G4Colour::Yellow());
 
 	// Kapton
 	Kapton = new G4Material("Kapton", density = fExtDensityRatio * 1.42 * g / cm3, ncomponents = 4);
@@ -119,6 +156,7 @@ void g4rcMaterial::ConstructMaterials() {
 
 	H2_liquid = fNistMan->FindOrBuildMaterial("G4_lH2");
 
+	
 	poly = fNistMan->FindOrBuildMaterial("G4_POLYETHYLENE");
 	
 	// ----  gas and liquid deuterium
@@ -145,10 +183,7 @@ void g4rcMaterial::ConstructMaterials() {
 	double P_vacuum = 1.e-6/760.0 *atmosphere;
 	vacuum = new G4Material("vacuum", 1, 28.97*g/mole, rho_vacuum, kStateGas, 293.15*kelvin, P_vacuum);
 
-	// Air
-	air = new G4Material("air", density = 1.225*mg/cm3, ncomponents = 2, kStateGas, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
-	air->AddElement(N, 80.*perCent);
-	air->AddElement(O, 20.*perCent);
+
 
 	// Aluminum
 	aluminum = new G4Material("aluminum", density = 2.7*g/cm3, ncomponents = 1, kStateSolid, CLHEP::STP_Temperature, CLHEP::STP_Pressure);
