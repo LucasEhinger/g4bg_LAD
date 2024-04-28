@@ -3,7 +3,7 @@
 # Setup the project
 #
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(G4RC)
+project(G4RC_LAD)
 
 enable_language (Fortran)
 
@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 find_package(ROOT REQUIRED)
 
 # this is to ensure we find the header we need
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/../include)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -52,7 +52,8 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Set CERN libraries
-set(cernlibs -L/share/apps/cernlib/x86_64-slc5/2006b/lib -lmathlib -lpacklib -lc -lm)
+# set(cernlibs -L/share/apps/cernlib/x86_64-slc5/2006b/lib -lmathlib -lpacklib -lc -lm)
+set(cernlibs -L/apps/cernlib/x86_64_rhel5/2005/lib/ -lmathlib -lpacklib -lc -lm)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
