@@ -34,7 +34,7 @@ not work.
 
 Visualization macros are found in vis/
 
-To run, execute
+To run, execute (think qsim is old. Should be g4bg)
 
 ./qsim
 
