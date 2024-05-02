@@ -114,15 +114,3 @@ void g4rcMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 	}
 		
 }
-
-
-
-
-
-
-
-
-
-
-
-

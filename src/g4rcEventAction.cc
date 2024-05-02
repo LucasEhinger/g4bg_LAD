@@ -41,7 +41,6 @@ void g4rcEventAction::BeginOfEventAction(const G4Event*ev) {
 }
 
 void g4rcEventAction::EndOfEventAction(const G4Event* evt ) {
-
 	//G4SDManager   *SDman = G4SDManager::GetSDMpointer();
 	G4HCofThisEvent *HCE = evt->GetHCofThisEvent();
 

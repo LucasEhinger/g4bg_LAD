@@ -60,6 +60,8 @@ class g4rcIO {
 	Double_t fEvPart_Y;
 	Double_t fEvPart_P;
 	Int_t fEvPart_PID;
+	Double_t fEvPart_Theta;
+	Double_t fEvPart_Phi;
 
 	//  DetectorHit
     public:
@@ -84,7 +86,7 @@ class g4rcIO {
 	Double_t fDetHit_M[__IO_MAXHIT];
 
 	Double_t fDetHit_Edep[__IO_MAXHIT];
-
+	Double_t fDetHit_t[__IO_MAXHIT];
 };
 
 #endif//g4rcIO_HH

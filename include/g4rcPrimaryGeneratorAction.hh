@@ -28,6 +28,7 @@ private:
 
 	g4rcEvent *fDefaultEvent;
 	g4rcIO *fIO;
+	G4int numberOfEvents;
 
 public:
 	G4double fXmin, fXmax, fYmin, fYmax;
@@ -39,6 +40,7 @@ public:
 	G4double fPprotonMax;
 
 	G4double fProtBool;
+	
 };
 
 #endif

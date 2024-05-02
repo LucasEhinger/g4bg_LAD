@@ -22,6 +22,7 @@ g4rcDetectorHit::g4rcDetectorHit(G4int det, G4int copy){
     fmTrID = -1;
 
     fGen   = 1;
+    fTime  = -1.0;
 }
 
 g4rcDetectorHit::~g4rcDetectorHit(){
@@ -47,6 +48,7 @@ g4rcDetectorHit::g4rcDetectorHit(const g4rcDetectorHit &right) : G4VHit(){
     fPID    = right.fPID;
     fmTrID  = right.fmTrID;
     fGen    = right.fGen;
+    fTime   = right.fTime;
 }
 
 const g4rcDetectorHit& g4rcDetectorHit::operator =(const g4rcDetectorHit &right){

@@ -22,8 +22,8 @@
 g4rcDetectorConstruction::g4rcDetectorConstruction() {
 
 	fGEMCenter[0] = 229.99575 * cm;	
-	fPolyBool = 0;
-	fPolyThick = 0.0;
+	// fPolyBool = 0;
+	// fPolyThick = 0.0;
 
 }
 
@@ -46,12 +46,12 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 	
 	double world_x, world_y, world_z;
 
-	world_x = world_y = world_z = 6.*m;
+	world_x = world_y = world_z = 10.*m;
 
 	G4Box* world_box = new G4Box("world",world_x,world_y,world_z);
 
 	G4LogicalVolume* world_log
-	= new G4LogicalVolume(world_box,fMaterial->vacuum,"World",0,0,0);
+	= new G4LogicalVolume(world_box,fMaterial->air,"World",0,0,0);
 
 	world_log->SetVisAttributes(G4VisAttributes::Invisible);
 
@@ -59,6 +59,7 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	double r_chamber = 40.*cm;
 	double t_chamber = 0.406*mm;
+    t_chamber = 1*mm;
 
 	G4Tubs* target_mother_tubs = new G4Tubs("targ_mother_tubs", 0., 50.*cm, 50.*cm, 0.*deg, 360.*deg);
 	G4LogicalVolume* target_mother_log = new G4LogicalVolume(target_mother_tubs,fMaterial->vacuum,"target_mother_logical",0,0,0);
@@ -184,19 +185,20 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// Start of full GEM detector definition
 
-	AddGEM(world_log, 101, false, 55.04*cm, 122.88*cm, rot_gem, pos1);
-	AddGEM(world_log, 102, false, 55.04*cm, 122.88*cm, rot_gem, pos2);
+	AddGEM(world_log, 101, false, 122.88*cm, 55.04*cm, rot_gem, pos1);
+	AddGEM(world_log, 102, false, 122.88*cm, 55.04*cm, rot_gem, pos2);
 	AddGEM(world_log, 201, false, 50.*cm, 50.*cm, rot_gmn, pos_gmn); 	
 	
 	// End of full GEM detector definition
 
     // Plane of LAD Scintillator
 
-    double x_LAD = 1.2*r_gem2*sin(gem_angle);
-    double z_LAD = 1.2*r_gem2*cos(gem_angle);
+    double r_scintilator = 4. *m;
+    double x_LAD = r_scintilator*sin(gem_angle);
+    double z_LAD = r_scintilator*cos(gem_angle);
 	G4ThreeVector pos_LAD = G4ThreeVector(x_LAD, 0., z_LAD);
 
-    G4Box* LAD_box = new G4Box("LAD_box", w_gem*4., h_gem*4., t_gem/2.);  
+    G4Box* LAD_box = new G4Box("LAD_box", w_gem*6., h_gem*6., t_gem/2.);  
 	G4LogicalVolume* LAD_log = new G4LogicalVolume(LAD_box, fMaterial->vacuum, "LAD_log", 0, 0, 0);
 	g4rcDetector* LAD_SD = new g4rcDetector("LAD_SD",501);
 	SDman->AddNewDetector(LAD_SD);

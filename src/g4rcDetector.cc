@@ -78,6 +78,7 @@ G4bool g4rcDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 	thishit->fTrID  = track->GetTrackID();
 	thishit->fmTrID = track->GetParentID();
 	thishit->fPID   = track->GetDefinition()->GetPDGEncoding();
+	thishit->fTime  = prestep->GetGlobalTime();
 
 	if(Edep > 0.) { 
 		thishit->AddEdep(Edep);

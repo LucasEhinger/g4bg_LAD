@@ -46,6 +46,7 @@ class g4rcDetectorHit : public G4VHit {
 	G4int    fGen;
 
 	G4double fEdep;	
+	G4double fTime;
 };
 
 

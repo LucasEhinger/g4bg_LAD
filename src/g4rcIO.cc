@@ -56,6 +56,8 @@ void g4rcIO::InitializeTree(){
     fTree->Branch("ev.vx",    &fEvPart_X,   "ev.vx/D");
     fTree->Branch("ev.vy",    &fEvPart_Y,   "ev.vy/D");
     fTree->Branch("ev.p",     &fEvPart_P,   "ev.p/D");
+    fTree->Branch("ev.theta", &fEvPart_Theta, "ev.theta/D");
+    fTree->Branch("ev.phi",   &fEvPart_Phi,   "ev.phi/D");
 
     // DetectorHit
     fTree->Branch("hit.n",    &fNDetHit,     "hit.n/I");
@@ -78,6 +80,7 @@ void g4rcIO::InitializeTree(){
     fTree->Branch("hit.m",    &fDetHit_M,   "hit.m[hit.n]/D");
 
     fTree->Branch("hit.edep", &fDetHit_Edep, "hit.edep[hit.n]/D");
+    fTree->Branch("hit.t",    &fDetHit_t,    "hit.t[hit.n]/D");
 
     return;
 }
@@ -146,6 +149,8 @@ void g4rcIO::SetEventData(g4rcEvent *ev){
 
     fEvPart_X = ev->fPartPos[0].x()/__L_UNIT;
     fEvPart_Y = ev->fPartPos[0].y()/__L_UNIT;
+    fEvPart_Theta = ev->fPartMom[0].theta();
+    fEvPart_Phi = ev->fPartMom[0].phi();
 
     fEvPart_P = ev->fPartMom[0].mag()/__E_UNIT;
 
@@ -183,6 +188,7 @@ void g4rcIO::AddDetectorHit(g4rcDetectorHit *hit){
     fDetHit_M[n]  = hit->fM/__E_UNIT;
 
     fDetHit_Edep[n] = hit->fEdep/__E_UNIT;
+    fDetHit_t[n] = hit->fTime/__T_UNIT;
 
     fNDetHit++;
 

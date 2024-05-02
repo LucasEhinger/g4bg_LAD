@@ -1,4 +1,3 @@
-
 // Make this appear first!
 #include "G4Timer.hh"
 
