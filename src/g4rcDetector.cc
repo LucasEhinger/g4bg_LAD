@@ -58,6 +58,11 @@ G4bool g4rcDetector::ProcessHits( G4Step *step, G4TouchableHistory *){
 		}
 	}
 
+	if (track->GetDefinition()->GetPDGEncoding() != 2212) {
+		//if the particle is a proton and the hit is not already in the collection
+		badhit = true;
+	}
+
 	if(!thishit && !badhit) {
 		thishit = new g4rcDetectorHit(fDetNo, copyID);
 		thishit->SetTrackID(trackID);

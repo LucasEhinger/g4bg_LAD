@@ -34,7 +34,7 @@ g4rcPrimaryGeneratorAction::g4rcPrimaryGeneratorAction() {
 
 	fEbeam = 10.9*GeV;
 
-	fThetaMin=90.*deg;
+	fThetaMin=95.*deg;
 	fThetaMax=160.*deg;
 	fPhiMin=-17.*deg;
 	fPhiMax=17.*deg;
@@ -94,10 +94,11 @@ void g4rcPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 	int n_ceil=ceil(sqrt(numberOfEvents));
 	int n_mod=eventID%n_floor;
 	int n_div=eventID/n_floor;
-	double theta_p=fThetaMin+n_mod*(fThetaMax-fThetaMin);
+	double theta_p=fThetaMin+((double)n_mod)/n_floor*(fThetaMax-fThetaMin);
 	double phi_p=0.*deg;
 	// double fPproton = CLHEP::RandFlat::shoot(0, fPprotonMax);
-	double fPproton = n_div*fPprotonMax;
+	double fPproton = ((double)n_div)/n_ceil*fPprotonMax;
+
 
 	px = fPproton*sin(theta_p)*cos(phi_p);
 	py = fPproton*sin(theta_p)*sin(phi_p);
