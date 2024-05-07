@@ -76,22 +76,22 @@ G4VPhysicalVolume* g4rcDetectorConstruction::Construct() {
 
 	// Target chamber exit window
 	G4Tubs* chamber_tubs = new G4Tubs("chamber_tubs", r_chamber, r_chamber+t_chamber, 20.*cm ,0.*deg, 360.*deg);
-	// G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->vacuum, "chamber_logical", 0,0,0);
-	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0); //original
+	G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->vacuum, "chamber_logical", 0,0,0);
+	// G4LogicalVolume* chamber_log = new G4LogicalVolume(chamber_tubs, fMaterial->aluminum, "chamber_logical", 0,0,0); //original
 	G4VPhysicalVolume* chamber_phys = new G4PVPlacement(0,G4ThreeVector(), chamber_log, "chamber_physical", target_mother_log, false, 0); 
 
 	// Target cell
 	G4Tubs* cell_tubs = new G4Tubs("cell_tubs", 0., radius + wall, length/2. + window, 0.*deg, 360.*deg);
 	G4Tubs* cell_empt = new G4Tubs("cell_empt", 0., radius, length/2., 0.*deg, 360.*deg);
 	G4SubtractionSolid* cell_sub = new G4SubtractionSolid("cell_sub", cell_tubs, cell_empt);
-	// G4LogicalVolume* cell_log = new G4LogicalVolume(cell_sub, fMaterial->vacuum, "cell_logical", 0, 0, 0);
-	G4LogicalVolume* cell_log = new G4LogicalVolume(cell_sub, fMaterial->aluminum, "cell_logical", 0, 0, 0); //original
+	G4LogicalVolume* cell_log = new G4LogicalVolume(cell_sub, fMaterial->vacuum, "cell_logical", 0, 0, 0);
+	// G4LogicalVolume* cell_log = new G4LogicalVolume(cell_sub, fMaterial->aluminum, "cell_logical", 0, 0, 0); //original
 	G4VPhysicalVolume* cell_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), cell_log, "cell_physical", target_mother_log, false, 0);
 
 	// Target liquid volume
 	G4Tubs* liquid_tubs = new G4Tubs("liquie_tubs", 0., radius, length/2., 0.*deg, 360.*deg);
-	// G4LogicalVolume* liquid_log = new G4LogicalVolume(liquid_tubs, fMaterial->vacuum, "liquid_logical", 0,0,0);
-	G4LogicalVolume* liquid_log = new G4LogicalVolume(liquid_tubs, fMaterial->D2_liquid, "liquid_logical", 0,0,0); //original
+	G4LogicalVolume* liquid_log = new G4LogicalVolume(liquid_tubs, fMaterial->vacuum, "liquid_logical", 0,0,0);
+	// G4LogicalVolume* liquid_log = new G4LogicalVolume(liquid_tubs, fMaterial->D2_liquid, "liquid_logical", 0,0,0); //original
 	G4VisAttributes* liquid_vis = new G4VisAttributes(G4Colour(0.,0.,1.));
 	liquid_log->SetVisAttributes(liquid_vis);
 	G4VPhysicalVolume* liquid_phys = new G4PVPlacement(rotX_pos90,G4ThreeVector(), liquid_log, "liquid_physical", target_mother_log, false, 0);	
