@@ -202,8 +202,8 @@ void LADDetectorConstructionGEMCreator::BuildGEM(G4LogicalVolume *worldLV, G4SDM
         gemlogname += cgidx;
 
         G4Box *gembox = new G4Box(gemboxname, wplanes[gidx] / 2.0, hplanes[gidx] / 2.0, gempzsum / 2.0);
-        G4LogicalVolume *gemlog = new G4LogicalVolume(gembox, fMaterial->air, gemlogname, 0, 0, 0); // orig
-        // G4LogicalVolume *gemlog = new G4LogicalVolume(gembox, fMaterial->vacuum, gemlogname, 0, 0, 0);
+        // G4LogicalVolume *gemlog = new G4LogicalVolume(gembox, fMaterial->air, gemlogname, 0, 0, 0); // orig
+        G4LogicalVolume *gemlog = new G4LogicalVolume(gembox, fMaterial->vacuum, gemlogname, 0, 0, 0);
 
         gemlog->SetVisAttributes(gemvisatt);
 
@@ -272,8 +272,8 @@ void LADDetectorConstructionGEMCreator::BuildGEM(G4LogicalVolume *worldLV, G4SDM
             ztemp += sign * gempz[gpidx] / 2.0;
 
             gpbox = new G4Box(gempboxname, wplanes[gidx] / 2.0, hplanes[gidx] / 2.0, gempz[gpidx] / 2.0);
-            gplog = new G4LogicalVolume(gpbox, gempm[gpidx], gemplogname, 0, 0, 0); // orig
-            // gplog = new G4LogicalVolume(gpbox, fMaterial->vacuum, gemplogname, 0, 0, 0);
+            // gplog = new G4LogicalVolume(gpbox, gempm[gpidx], gemplogname, 0, 0, 0); // orig
+            gplog = new G4LogicalVolume(gpbox, fMaterial->vacuum, gemplogname, 0, 0, 0);
 
             new G4PVPlacement(0, G4ThreeVector(0.0, 0.0, ztemp - gempzsum / 2.0), gplog, gempphysname, gemlog, false, 0, false);
 

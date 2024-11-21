@@ -1,6 +1,7 @@
-/g4rc/filename g4bg_out_protons_GEM_Only_10_6.root
+/g4rc/filename g4bg_out_poly125_faraday_10_6.root
 /g4rc/protonOnly 1
-/g4rc/poly 0
+/g4rc/poly 1
 /g4rc/polyT 125 um
+/g4rc/faraday 1
 /run/initialize
-/run/beamOn 10000
+/run/beamOn 1000000

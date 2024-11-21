@@ -53,6 +53,7 @@ class g4rcMessenger : public G4UImessenger {
 	G4UIcmdWithAnInteger *protBoolCmd;
 	G4UIcmdWithAnInteger *polyCmd;
 	G4UIcmdWithADoubleAndUnit *polyTCmd;
+	G4UIcmdWithAnInteger *faradayCmd;
 	G4UIcmdWithAString* targCmd;
 	G4UIcmdWithAString* hrsCmd;
 

@@ -57,16 +57,16 @@ G4bool g4rcDetector::ProcessHits(G4Step *step, G4TouchableHistory *)
 	{
 		if (((*fHitColl)[i]->GetTrackID() == trackID))
 		{
-			// if ( ((*fHitColl)[i]->GetTrackID() == trackID) || ((*fHitColl)[i]->GetTrackID() == parentID)  ) {
+		// if ( ((*fHitColl)[i]->GetTrackID() == trackID) || ((*fHitColl)[i]->GetTrackID() == parentID)  ) {
 			thishit = (*fHitColl)[i];
 			break;
 		}
 	}
 
-	if (track->GetDefinition()->GetPDGEncoding() != 2212) {
-		//if the particle is not a proton, skip it
-		badhit = true;
-	}
+	// if (track->GetDefinition()->GetPDGEncoding() != 2212) {
+	// 	//if the particle is not a proton, skip it
+	// 	badhit = true;
+	// }
 
 	if (!thishit && !badhit)
 	{

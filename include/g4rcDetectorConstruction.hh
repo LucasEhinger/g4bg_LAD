@@ -23,6 +23,7 @@ public:
 	G4double fHRSAngle;	
 	G4double fPolyThick;
 	G4int fPolyBool;
+	G4int fFaradayBool;
 
 private:
 	G4int fTargIndex;

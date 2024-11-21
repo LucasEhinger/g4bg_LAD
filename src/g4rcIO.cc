@@ -100,9 +100,10 @@ void g4rcIO::FillTree(){
 	return; 
     }
 
-    if( g4rcIO::HasProtonHit() ){
-        fTree->Fill();
-    }
+    // if( g4rcIO::HasProtonHit() ){
+    //     fTree->Fill();
+    // }
+    fTree->Fill();
 }
 
 void g4rcIO::Flush(){

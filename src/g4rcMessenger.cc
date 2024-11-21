@@ -56,6 +56,10 @@ g4rcMessenger::g4rcMessenger(){
 	polyTCmd->SetGuidance("Set poly thickness");
 	polyTCmd->SetParameterName("polyT",false);	
 
+	faradayCmd = new G4UIcmdWithAnInteger("/g4rc/faraday",this);
+	faradayCmd->SetGuidance("Include faraday cage?");
+	faradayCmd->SetParameterName("faraday",false);
+
 	targCmd = new G4UIcmdWithAString("/g4rc/target",this);
 	targCmd->SetGuidance("Set target");
 	targCmd->SetParameterName("targ",false);	
@@ -99,6 +103,10 @@ void g4rcMessenger::SetNewValue(G4UIcommand* cmd, G4String newValue){
 		fdetcon->fPolyBool = poly;
 	}
 
+	if (cmd == faradayCmd ) {
+		G4int faraday = faradayCmd->GetNewIntValue(newValue);
+		fdetcon->fFaradayBool = faraday;
+	}
 
 	if (cmd == polyTCmd ) {
 		G4double polyT = polyTCmd->GetNewDoubleValue(newValue);
